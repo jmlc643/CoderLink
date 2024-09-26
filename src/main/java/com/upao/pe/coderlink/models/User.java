@@ -1,5 +1,6 @@
 package com.upao.pe.coderlink.models;
 
+import com.upao.pe.coderlink.models.enums.TypeUser;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_user")
     private Long idUser;
 
@@ -34,5 +35,6 @@ public class User {
     private String password;
 
     @Column(name = "type_user", length = 20)
-    private String typeUser;
+    @Enumerated(EnumType.STRING)
+    private TypeUser typeUser;
 }

@@ -6,6 +6,7 @@ import com.upao.pe.coderlink.dtos.postulation.PostulationDTO;
 import com.upao.pe.coderlink.exceptions.ResourceNotExistsException;
 import com.upao.pe.coderlink.models.Developer;
 import com.upao.pe.coderlink.models.Postulation;
+import com.upao.pe.coderlink.models.enums.TypeUser;
 import com.upao.pe.coderlink.repos.DeveloperRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,7 +29,7 @@ public class DeveloperService {
         developer.setLastName(request.getLastName());
         developer.setEmail(request.getEmail());
         developer.setPassword(request.getPassword());
-        developer.setTypeUser(request.getTypeUser());
+        developer.setTypeUser(TypeUser.valueOf(request.getTypeUser()));
         return returnDeveloperDTO(developerRepository.save(developer));
     }
 

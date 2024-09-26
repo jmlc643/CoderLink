@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Entity
 public class Token {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_token")
     private Long idToken;
 

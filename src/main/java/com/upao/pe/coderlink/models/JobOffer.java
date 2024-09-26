@@ -16,7 +16,7 @@ import java.util.List;
 public class JobOffer {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_offer")
     private Long idOffer;
 

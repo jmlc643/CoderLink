@@ -5,8 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,7 +13,7 @@ import java.util.List;
 public class Skill {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_skill")
     private Long idSkill;
 
@@ -24,8 +22,4 @@ public class Skill {
 
     @Column(name = "description")
     private String description;
-
-    //Mapear uno a muchos con skillProjects
-    @OneToMany(mappedBy = "skill", cascade = CascadeType.ALL)
-    private List<SkillsProject> skillsProjects;
 }

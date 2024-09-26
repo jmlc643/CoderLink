@@ -6,6 +6,7 @@ import com.upao.pe.coderlink.dtos.joboffer.JobOfferDTO;
 import com.upao.pe.coderlink.exceptions.ResourceNotExistsException;
 import com.upao.pe.coderlink.models.Customer;
 import com.upao.pe.coderlink.models.JobOffer;
+import com.upao.pe.coderlink.models.enums.TypeUser;
 import com.upao.pe.coderlink.repos.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,7 +28,7 @@ public class CustomerService {
         customer.setLastName(request.getLastName());
         customer.setEmail(request.getEmail());
         customer.setPassword(request.getPassword());
-        customer.setTypeUser(request.getTypeUser());
+        customer.setTypeUser(TypeUser.valueOf(request.getTypeUser()));
         return returnCustomerDTO(customerRepository.save(customer));
     }
 

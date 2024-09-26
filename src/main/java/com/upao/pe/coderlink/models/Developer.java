@@ -13,13 +13,6 @@ import java.util.List;
 @Table(name = "developers")
 @Entity
 public class Developer extends User{
-/*
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id_developer")
-    private Long idDeveloper;
-
- */
 
     @Column(name = "portafolio", length = 30, nullable = false)
     private String portafolio;

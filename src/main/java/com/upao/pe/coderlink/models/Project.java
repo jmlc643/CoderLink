@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -16,7 +17,7 @@ import java.util.List;
 public class Project {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_project")
     private Long idProject;
 
@@ -50,7 +51,8 @@ public class Project {
     @Column(name = "updated_at")
     private LocalDate updatedAt;
 
-    //Mapear uno a muchos con skillsProject
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
-    private List<SkillsProject> skillsProjects;
+    //Mapear muchos a muchos con Skills
+    @ManyToMany(fetch = FetchType.EAGER, targetEntity = Skill.class, cascade = CascadeType.PERSIST)
+    @JoinTable(name = "skills_projects", joinColumns = @JoinColumn(name = "id_project"), inverseJoinColumns = @JoinColumn(name = "id_skill"))
+    private Set<Skill> skills;
 }

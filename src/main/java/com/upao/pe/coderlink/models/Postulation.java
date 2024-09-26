@@ -15,7 +15,7 @@ import java.time.LocalDate;
 public class Postulation {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_postulation")
     private Long idPostulation;
 
