@@ -6,6 +6,8 @@ import com.upao.pe.coderlink.dtos.developer.CreateDeveloperRequest;
 import com.upao.pe.coderlink.dtos.developer.DeveloperDTO;
 import com.upao.pe.coderlink.dtos.user.AuthResponse;
 import com.upao.pe.coderlink.dtos.user.AuthenticationUserRequest;
+import com.upao.pe.coderlink.dtos.user.RecoveryPasswordRequest;
+import com.upao.pe.coderlink.dtos.user.RecoveryPasswordResponse;
 import com.upao.pe.coderlink.exceptions.ExpiredTokenException;
 import com.upao.pe.coderlink.exceptions.ResourceNotExistsException;
 import com.upao.pe.coderlink.exceptions.UsedEmailException;
@@ -25,6 +27,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 public class AuthService {
@@ -35,6 +38,7 @@ public class AuthService {
     @Autowired private PasswordEncoder passwordEncoder;
     @Autowired private JwtUtils jwtUtils;
     @Autowired private JwtUserDetailsService userDetailsService;
+    @Autowired private EmailService emailService;
 
     public CustomerDTO registerCustomer(CreateCustomerRequest request){
         request.setPassword(passwordEncoder.encode(request.getPassword()));
@@ -117,5 +121,19 @@ public class AuthService {
         }
 
         return new UsernamePasswordAuthenticationToken(username, userDetails.getPassword(), userDetails.getAuthorities());
+    }
+
+    public RecoveryPasswordResponse recoveryPassword(RecoveryPasswordRequest request) {
+        if(!userRepository.existsUserByEmail(request.getEmail())){
+            throw new ResourceNotExistsException("No user was found linked to this email");
+        }
+        User user = userRepository.findByEmail(request.getEmail());
+        String token = tokenService.getTokenByUser(user).getToken();
+        String url = "#/reset-password/"+token;
+        String message = "Hola "+user.getUsername()+" vemos que olvidaste tu contraseña y en CoderLink nos gusta la tranquilidad de nuestros usuarios."+
+                "Ingresa a este link para que reestablezcas tu contraseña y puedas seguir disfrutando las funcioens de Learnsync."+
+                "Link: "+url;
+        emailService.sendEmail(request.getEmail(), "Reestablecer Contraseña", message);
+        return new RecoveryPasswordResponse("Email sended");
     }
 }

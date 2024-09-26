@@ -26,7 +26,7 @@ public class TokenService {
 
     public Token getToken(String token){
         if(!tokenRepository.existsTokenByToken(token)){
-            throw new ResourceNotExistsException("This token don't exists");
+            throw new ResourceNotExistsException("This token doesn't exists");
         } return tokenRepository.findByToken(token);
     }
 
@@ -38,5 +38,11 @@ public class TokenService {
 
     public void saveChanges(Token token) {
         tokenRepository.saveAndFlush(token);
+    }
+
+    public Token getTokenByUser(User user){
+        if(!tokenRepository.existsTokenByUser(user)){
+            throw new ResourceNotExistsException(("This token doesn't exists"));
+        } return tokenRepository.findByUser(user);
     }
 }
