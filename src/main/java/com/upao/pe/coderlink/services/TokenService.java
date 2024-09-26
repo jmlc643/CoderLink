@@ -19,8 +19,8 @@ public class TokenService {
     public void sendEmail(User user){
         String token = generateToken(user);
         String url = "http://localhost:8080/auth/confirmation-token/"+token;
-        String message = "Felicidades "+user.getNames()+" "+user.getLastName()+"por registrar su cuenta, estas a un solo paso de poder hacer uso "+
-                "de las funciones de ReadEDU, entra a este link para que puedas activar tu cuenta de ReadEDU.\nLink: "+url;
+        String message = "Felicidades "+user.getUsername()+" por registrar su cuenta, estas a un solo paso de poder hacer uso "+
+                "de las funciones de ReadEDU, entra a este link para que puedas activar tu cuenta de CoderLink.\nLink: "+url;
         emailService.sendEmail(user.getEmail(), "Activación de cuenta", message);
     }
 

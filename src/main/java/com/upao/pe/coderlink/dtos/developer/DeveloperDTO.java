@@ -9,6 +9,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class DeveloperDTO {
+    private String username;
     private String names;
     private String lastNames;
     private String email;

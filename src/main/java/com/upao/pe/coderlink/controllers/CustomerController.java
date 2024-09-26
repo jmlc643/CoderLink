@@ -17,9 +17,4 @@ public class CustomerController {
 
     @GetMapping("/list/")
     public List<CustomerDTO> listCustomers(){return customerService.listCustomer();}
-
-    @PostMapping("/create/")
-    public CustomerDTO createCustomerDTO(@Valid @RequestBody CreateCustomerRequest request){
-        return customerService.createCustomer(request);
-    }
 }

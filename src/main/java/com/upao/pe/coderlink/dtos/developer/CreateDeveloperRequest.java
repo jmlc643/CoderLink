@@ -7,8 +7,10 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class CreateDeveloperRequest {
+    @NotEmpty(message = "Empty Data")
+    @NotBlank(message = "A data with only blank spaces is not valid")
+    private String username;
     @NotNull(message = "Null Data")
-    @DecimalMax(value = "8", message = "A DNI has 8 characters long")
     private int dni;
     @NotEmpty(message = "Empty Data")
     @NotBlank(message = "A data with only blank spaces is not valid")

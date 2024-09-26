@@ -3,11 +3,13 @@ package com.upao.pe.coderlink.services;
 import com.upao.pe.coderlink.dtos.developer.CreateDeveloperRequest;
 import com.upao.pe.coderlink.dtos.developer.DeveloperDTO;
 import com.upao.pe.coderlink.dtos.postulation.PostulationDTO;
+import com.upao.pe.coderlink.exceptions.ResourceExistsException;
 import com.upao.pe.coderlink.exceptions.ResourceNotExistsException;
 import com.upao.pe.coderlink.models.Developer;
 import com.upao.pe.coderlink.models.Postulation;
 import com.upao.pe.coderlink.models.enums.TypeUser;
 import com.upao.pe.coderlink.repos.DeveloperRepository;
+import com.upao.pe.coderlink.repos.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,16 +23,26 @@ public class DeveloperService {
     @Autowired
     DeveloperRepository developerRepository;
 
+    @Autowired
+    UserRepository userRepository;
+
     // CREATE
-    public DeveloperDTO createDeveloper(CreateDeveloperRequest request){
+    public Developer createDeveloper(CreateDeveloperRequest request){
         Developer developer = new Developer(request.getPortfolio(), request.getHoursWorked(), request.getPaymentRate(), request.getWorkExperience(), request.getYearsExperience(), new ArrayList<>());
+        if(userRepository.existsUserByUsername(developer.getUsername())){
+            throw new ResourceExistsException("User "+developer.getUsername()+" exists");
+        }
+        if(userRepository.existsUserByEmail(developer.getEmail())){
+            throw new ResourceExistsException("User with email "+developer.getEmail()+" exists");
+        }
+        developer.setUsername(request.getUsername());
         developer.setDni(request.getDni());
         developer.setNames(request.getNames());
         developer.setLastName(request.getLastName());
         developer.setEmail(request.getEmail());
         developer.setPassword(request.getPassword());
-        developer.setTypeUser(TypeUser.valueOf(request.getTypeUser()));
-        return returnDeveloperDTO(developerRepository.save(developer));
+        developer.setTypeUser(TypeUser.valueOf(request.getTypeUser().toUpperCase()));
+        return developerRepository.save(developer);
     }
 
     // READ
@@ -47,14 +59,14 @@ public class DeveloperService {
             PostulationDTO postulationDTO = new PostulationDTO(postulation.getPublicationDate(), postulation.getStatus());
             postulations.add(postulationDTO);
         }
-        return new DeveloperDTO(developer.getNames(), developer.getLastName(), developer.getEmail(), developer.getPortafolio(), developer.getHoursWorked(), developer.getPaymentRate(), developer.getWorkExperience(), developer.getYearsExperience(), postulations);
+        return new DeveloperDTO(developer.getUsername(), developer.getNames(), developer.getLastName(), developer.getEmail(), developer.getPortafolio(), developer.getHoursWorked(), developer.getPaymentRate(), developer.getWorkExperience(), developer.getYearsExperience(), postulations);
     }
 
     // GET
-    public Developer getDeveloper(String names, String lastName){
-        Optional<Developer> developer = developerRepository.findByNamesAndLastName(names, lastName);
+    public Developer getDeveloper(String username){
+        Optional<Developer> developer = developerRepository.findByUsername(username);
         if(developer.isEmpty()){
-            throw new ResourceNotExistsException("Developer "+names+" "+lastName+" has not been founded");
+            throw new ResourceNotExistsException("Developer "+username+" has not been founded");
         }
         return developer.get();
     }
