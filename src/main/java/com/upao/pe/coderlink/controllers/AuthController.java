@@ -4,10 +4,7 @@ import com.upao.pe.coderlink.dtos.customer.CreateCustomerRequest;
 import com.upao.pe.coderlink.dtos.customer.CustomerDTO;
 import com.upao.pe.coderlink.dtos.developer.CreateDeveloperRequest;
 import com.upao.pe.coderlink.dtos.developer.DeveloperDTO;
-import com.upao.pe.coderlink.dtos.user.AuthResponse;
-import com.upao.pe.coderlink.dtos.user.AuthenticationUserRequest;
-import com.upao.pe.coderlink.dtos.user.RecoveryPasswordRequest;
-import com.upao.pe.coderlink.dtos.user.RecoveryPasswordResponse;
+import com.upao.pe.coderlink.dtos.user.*;
 import com.upao.pe.coderlink.services.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,5 +42,10 @@ public class AuthController {
     @PostMapping("/recovery-password/")
     public ResponseEntity<RecoveryPasswordResponse> recoverPassword(@Valid @RequestBody RecoveryPasswordRequest request){
         return new ResponseEntity<>(authService.recoveryPassword(request), HttpStatus.OK);
+    }
+
+    @PatchMapping("/change-password/")
+    public ResponseEntity<ChangePasswordResponse> changePassword(@Valid @RequestBody ChangePasswordRequest request){
+        return new ResponseEntity<>(authService.changePassword(request), HttpStatus.OK);
     }
 }

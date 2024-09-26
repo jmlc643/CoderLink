@@ -41,7 +41,7 @@ public class SecurityConfiguration {
     // Configure the security
     // HttpSecurity is very important
     @Bean
-    public SecurityFilterChain filterChai(HttpSecurity httpSecurity) throws Exception{
+    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception{
         return httpSecurity.
                 csrf(AbstractHttpConfigurer::disable)
                 // Permit request to all endpoints of AuthController without authentication
@@ -49,6 +49,7 @@ public class SecurityConfiguration {
                     // Configure public endpoints
                     auth.requestMatchers(HttpMethod.GET, "/auth/**").permitAll();
                     auth.requestMatchers(HttpMethod.POST, "/auth/**").permitAll();
+                    auth.requestMatchers(HttpMethod.PATCH, "/auth/**").permitAll();
 
                     // Configure private endpoints
                     auth.requestMatchers("/project/create/").hasRole("CUSTOMER");

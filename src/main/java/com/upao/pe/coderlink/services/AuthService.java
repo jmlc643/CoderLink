@@ -4,10 +4,7 @@ import com.upao.pe.coderlink.dtos.customer.CreateCustomerRequest;
 import com.upao.pe.coderlink.dtos.customer.CustomerDTO;
 import com.upao.pe.coderlink.dtos.developer.CreateDeveloperRequest;
 import com.upao.pe.coderlink.dtos.developer.DeveloperDTO;
-import com.upao.pe.coderlink.dtos.user.AuthResponse;
-import com.upao.pe.coderlink.dtos.user.AuthenticationUserRequest;
-import com.upao.pe.coderlink.dtos.user.RecoveryPasswordRequest;
-import com.upao.pe.coderlink.dtos.user.RecoveryPasswordResponse;
+import com.upao.pe.coderlink.dtos.user.*;
 import com.upao.pe.coderlink.exceptions.ExpiredTokenException;
 import com.upao.pe.coderlink.exceptions.ResourceNotExistsException;
 import com.upao.pe.coderlink.exceptions.UsedEmailException;
@@ -135,5 +132,15 @@ public class AuthService {
                 "Link: "+url;
         emailService.sendEmail(request.getEmail(), "Reestablecer Contraseña", message);
         return new RecoveryPasswordResponse("Email sended");
+    }
+
+    public ChangePasswordResponse changePassword(ChangePasswordRequest request){
+        if(!request.getPassword().equalsIgnoreCase(request.getConfirmationPassword())){
+            throw new RuntimeException("Different Password");
+        }
+        User user = tokenService.getToken(request.getToken()).getUser();
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+        userRepository.saveAndFlush(user);
+        return new ChangePasswordResponse("Password changed");
     }
 }
