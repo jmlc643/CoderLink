@@ -51,8 +51,7 @@ public class Project {
     @Column(name = "updated_at")
     private LocalDate updatedAt;
 
-    //Mapear muchos a muchos con Skills
-    @ManyToMany(fetch = FetchType.EAGER, targetEntity = Skill.class, cascade = CascadeType.PERSIST)
-    @JoinTable(name = "skills_projects", joinColumns = @JoinColumn(name = "id_project"), inverseJoinColumns = @JoinColumn(name = "id_skill"))
-    private Set<Skill> skills;
+    // Mapear el uno a muchos con JobOffer
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    private List<JobOffer> jobOffers;
 }

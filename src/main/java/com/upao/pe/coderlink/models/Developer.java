@@ -32,4 +32,9 @@ public class Developer extends User{
     // Mapear el uno a muchos con Postulation
     @OneToMany(mappedBy = "developer", cascade = CascadeType.ALL)
     private List<Postulation> postulations;
+
+    //Mapear muchos a muchos con Skills
+    @ManyToMany(fetch = FetchType.EAGER, targetEntity = Skill.class, cascade = CascadeType.PERSIST)
+    @JoinTable(name = "dev_skills", joinColumns = @JoinColumn(name = "id_developer"), inverseJoinColumns = @JoinColumn(name = "id_skill"))
+    private List<Skill> skills;
 }

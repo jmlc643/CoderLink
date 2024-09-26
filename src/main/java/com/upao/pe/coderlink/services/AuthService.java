@@ -4,6 +4,8 @@ import com.upao.pe.coderlink.dtos.customer.CreateCustomerRequest;
 import com.upao.pe.coderlink.dtos.customer.CustomerDTO;
 import com.upao.pe.coderlink.dtos.developer.CreateDeveloperRequest;
 import com.upao.pe.coderlink.dtos.developer.DeveloperDTO;
+import com.upao.pe.coderlink.dtos.user.AuthResponse;
+import com.upao.pe.coderlink.dtos.user.AuthenticationUserRequest;
 import com.upao.pe.coderlink.exceptions.ExpiredTokenException;
 import com.upao.pe.coderlink.exceptions.ResourceNotExistsException;
 import com.upao.pe.coderlink.exceptions.UsedEmailException;
@@ -12,7 +14,13 @@ import com.upao.pe.coderlink.models.Developer;
 import com.upao.pe.coderlink.models.Token;
 import com.upao.pe.coderlink.models.User;
 import com.upao.pe.coderlink.repos.UserRepository;
+import com.upao.pe.coderlink.util.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +33,8 @@ public class AuthService {
     @Autowired private DeveloperService developerService;
     @Autowired private UserRepository userRepository;
     @Autowired private PasswordEncoder passwordEncoder;
+    @Autowired private JwtUtils jwtUtils;
+    @Autowired private JwtUserDetailsService userDetailsService;
 
     public CustomerDTO registerCustomer(CreateCustomerRequest request){
         request.setPassword(passwordEncoder.encode(request.getPassword()));
@@ -84,5 +94,28 @@ public class AuthService {
                 "      </td>\n" +
                 "    </tr>\n" +
                 "  </table>";
+    }
+
+    public AuthResponse login(AuthenticationUserRequest request){
+        Authentication authentication = authenticate(request.getUsername(), request.getPassword());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        String accessToken = jwtUtils.generateToken(authentication);
+
+        return new AuthResponse(request.getUsername(), "Authentication successfuly", accessToken, true);
+    }
+
+    public Authentication authenticate(String username, String password){
+        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+
+        if(userDetails == null){
+            throw new BadCredentialsException("Invalid Username or Password");
+        }
+
+        if(!passwordEncoder.matches(password, userDetails.getPassword())){
+            throw new BadCredentialsException("Invalid Password");
+        }
+
+        return new UsernamePasswordAuthenticationToken(username, userDetails.getPassword(), userDetails.getAuthorities());
     }
 }

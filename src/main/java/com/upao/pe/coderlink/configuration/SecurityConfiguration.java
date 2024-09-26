@@ -1,6 +1,8 @@
 package com.upao.pe.coderlink.configuration;
 
+import com.upao.pe.coderlink.configuration.filter.JwtTokenValidator;
 import com.upao.pe.coderlink.services.JwtUserDetailsService;
+import com.upao.pe.coderlink.util.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -23,6 +25,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -33,10 +36,7 @@ public class SecurityConfiguration {
     @Autowired
     AuthenticationConfiguration authenticationConfiguration;
 
-    @Value("${spring.security.user.name}")
-    String user;
-    @Value("${spring.security.user.password}")
-    String password;
+    @Autowired private JwtUtils jwtUtils;
 
     // Configure the security
     // HttpSecurity is very important
@@ -59,6 +59,7 @@ public class SecurityConfiguration {
                     auth.anyRequest().authenticated();
                 })
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .addFilterBefore(new JwtTokenValidator(jwtUtils), BasicAuthenticationFilter.class)
                 .build();
     }
 

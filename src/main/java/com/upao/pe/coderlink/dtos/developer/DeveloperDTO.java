@@ -1,6 +1,7 @@
 package com.upao.pe.coderlink.dtos.developer;
 
 import com.upao.pe.coderlink.dtos.postulation.PostulationDTO;
+import com.upao.pe.coderlink.dtos.skill.SkillDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -19,4 +20,5 @@ public class DeveloperDTO {
     private String workExperience;
     private int yearsExperience;
     private List<PostulationDTO> postulations;
+    private List<SkillDTO> skills;
 }

@@ -3,10 +3,13 @@ package com.upao.pe.coderlink.services;
 import com.upao.pe.coderlink.dtos.developer.CreateDeveloperRequest;
 import com.upao.pe.coderlink.dtos.developer.DeveloperDTO;
 import com.upao.pe.coderlink.dtos.postulation.PostulationDTO;
+import com.upao.pe.coderlink.dtos.skill.CreateSkillRequest;
+import com.upao.pe.coderlink.dtos.skill.SkillDTO;
 import com.upao.pe.coderlink.exceptions.ResourceExistsException;
 import com.upao.pe.coderlink.exceptions.ResourceNotExistsException;
 import com.upao.pe.coderlink.models.Developer;
 import com.upao.pe.coderlink.models.Postulation;
+import com.upao.pe.coderlink.models.Skill;
 import com.upao.pe.coderlink.models.enums.TypeUser;
 import com.upao.pe.coderlink.repos.DeveloperRepository;
 import com.upao.pe.coderlink.repos.UserRepository;
@@ -26,9 +29,15 @@ public class DeveloperService {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired SkillService skillService;
+
     // CREATE
     public Developer createDeveloper(CreateDeveloperRequest request){
-        Developer developer = new Developer(request.getPortfolio(), request.getHoursWorked(), request.getPaymentRate(), request.getWorkExperience(), request.getYearsExperience(), new ArrayList<>());
+        request.getSkills().forEach(skill -> {
+            CreateSkillRequest skillRequest = new CreateSkillRequest(skill.getName(), skill.getDescription());
+            skillService.createSkill(skillRequest);
+        });
+        Developer developer = new Developer(request.getPortfolio(), request.getHoursWorked(), request.getPaymentRate(), request.getWorkExperience(), request.getYearsExperience(), new ArrayList<>(), request.getSkills());
         if(userRepository.existsUserByUsername(developer.getUsername())){
             throw new ResourceExistsException("User "+developer.getUsername()+" exists");
         }
@@ -55,11 +64,16 @@ public class DeveloperService {
     // DTO
     public DeveloperDTO returnDeveloperDTO(Developer developer){
         List<PostulationDTO> postulations = new ArrayList<>();
+        List<SkillDTO> skills = new ArrayList<>();
         for(Postulation postulation : developer.getPostulations()){
             PostulationDTO postulationDTO = new PostulationDTO(postulation.getPublicationDate(), postulation.getStatus());
             postulations.add(postulationDTO);
         }
-        return new DeveloperDTO(developer.getUsername(), developer.getNames(), developer.getLastName(), developer.getEmail(), developer.getPortafolio(), developer.getHoursWorked(), developer.getPaymentRate(), developer.getWorkExperience(), developer.getYearsExperience(), postulations);
+        for(Skill skill : developer.getSkills()){
+            SkillDTO skillDTO = new SkillDTO(skill.getName(), skill.getDescription());
+            skills.add(skillDTO);
+        }
+        return new DeveloperDTO(developer.getUsername(), developer.getNames(), developer.getLastName(), developer.getEmail(), developer.getPortafolio(), developer.getHoursWorked(), developer.getPaymentRate(), developer.getWorkExperience(), developer.getYearsExperience(), postulations, skills);
     }
 
     // GET
