@@ -52,7 +52,7 @@ public class CustomerService {
     public Customer getCustomer(String companyName){
         Optional<Customer> customer = customerRepository.findByCompanyName(companyName);
         if(customer.isEmpty()){
-            throw new ResourceNotExistsException("Company "+companyName+" has not found");
+            throw new ResourceNotExistsException("Company "+companyName+" has not been found");
         }
         return customer.get();
     }
