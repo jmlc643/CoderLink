@@ -1,4 +1,4 @@
-package com.upao.pe.coderlink.dtos.user;
+package com.upao.pe.coderlink.dtos.customer;
 
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
@@ -6,9 +6,9 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class CreateUserRequest {
+public class CreateCustomerRequest {
     @NotNull(message = "Null Data")
-    @Size(max = 8, message = "A DNI has 9 characters long")
+    @DecimalMax(value = "8", message = "A DNI has 8 characters long")
     private int dni;
     @NotEmpty(message = "Empty Data")
     @NotBlank(message = "A data with only blank spaces is not valid")
@@ -26,4 +26,11 @@ public class CreateUserRequest {
     @NotEmpty(message = "Empty Data")
     @NotBlank(message = "A data with only blank spaces is not valid")
     private String typeUser;
+    @NotEmpty(message = "Empty Data")
+    @NotBlank(message = "A data with only blank spaces is not valid")
+    private String companyName;
+    @NotNull(message = "Null Data")
+    private int ruc;
+    @NotNull(message = "Null Data")
+    private int phone;
 }

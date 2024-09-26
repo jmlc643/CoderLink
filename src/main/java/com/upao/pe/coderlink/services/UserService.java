@@ -15,7 +15,7 @@ public class UserService {
     // CREATE
     public User createUser(CreateUserRequest request){
         User user = new User(null, request.getDni(), request.getNames(), request.getLastName(), request.getEmail(), request.getPassword(), request.getTypeUser());
-        if(userRepository.existsUserByUserName(user.getNames())){
+        if(userRepository.existsUserByNames(user.getNames())){
             throw new ResourceExistsException("User "+user.getNames()+" exists");
         }
         if(userRepository.existsUserByEmail(user.getEmail())){
