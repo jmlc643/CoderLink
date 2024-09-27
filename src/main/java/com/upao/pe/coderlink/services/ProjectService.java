@@ -39,11 +39,8 @@ public class ProjectService {
 
     // DELETE
     public List<ProjectDTO> deleteProject(Long id){
-        Optional<Project> project = projectRepository.findById(id);
-        if(project.isEmpty()){
-            throw new ResourceNotExistsException("This project has not been founded");
-        }
-        projectRepository.delete(project.get());
+        Project project = getProjectById(id);
+        projectRepository.delete(project);
         return listProjects();
     }
 
@@ -60,6 +57,27 @@ public class ProjectService {
             skills.add(skillDTO);
         }
         return new ProjectDTO(project.getName(), project.getDescription(), project.getMilestones(), project.getPresentation(), project.getRevision(), project.getStatus(), project.getCategory(), project.getQualification(), project.getCreatedAt(), offers, skills);
+    }
+
+    // Search
+    public List<ProjectDTO> getProjectsByName(String name){
+        List<ProjectDTO> projectDTOS = new ArrayList<>();
+        Optional<List<Project>> projects = projectRepository.findAllByNameContaining(name);
+        if(projects.isEmpty()){
+            throw new ResourceNotExistsException("No project has not been founded");
+        }
+        projects.get().forEach(project -> {
+            projectDTOS.add(returnProjectDTO(project));
+        });
+        return projectDTOS;
+    }
+
+    public Project getProjectById(Long id){
+        Optional<Project> project = projectRepository.findById(id);
+        if(project.isEmpty()){
+            throw new ResourceNotExistsException("This project has not been founded");
+        }
+        return project.get();
     }
 
 }
