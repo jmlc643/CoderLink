@@ -24,12 +24,12 @@ import java.util.Optional;
 public class DeveloperService {
 
     @Autowired
-    DeveloperRepository developerRepository;
+    private DeveloperRepository developerRepository;
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
-    @Autowired SkillService skillService;
+    @Autowired private SkillService skillService;
 
     // CREATE
     public Developer createDeveloper(CreateDeveloperRequest request){

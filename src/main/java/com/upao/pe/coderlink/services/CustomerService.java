@@ -22,12 +22,10 @@ import java.util.Optional;
 @Service
 public class CustomerService {
     @Autowired
-    CustomerRepository customerRepository;
+    private CustomerRepository customerRepository;
 
     @Autowired
-    UserRepository userRepository;
-
-    @Autowired ProjectService projectService;
+    private UserRepository userRepository;
 
     // CREATE
     public Customer createCustomer(CreateCustomerRequest request){

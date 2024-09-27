@@ -20,7 +20,6 @@ public class CreateProjectRequest {
     private String description;
     @NotNull(message = "Null Data")
     private double budget;
-    private LocalDate duration;
     @NotEmpty(message = "Empty Data")
     @NotBlank(message = "A data with only blank spaces is not valid")
     private String milestones;
@@ -30,9 +29,6 @@ public class CreateProjectRequest {
     @NotEmpty(message = "Empty Data")
     @NotBlank(message = "A data with only blank spaces is not valid")
     private String revision;
-    @NotEmpty(message = "Empty Data")
-    @NotBlank(message = "A data with only blank spaces is not valid")
-    private String status;
     @NotEmpty(message = "Empty Data")
     @NotBlank(message = "A data with only blank spaces is not valid")
     private String category;

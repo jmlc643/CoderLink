@@ -16,7 +16,7 @@ import java.util.List;
 @RequestMapping("project")
 public class ProjectController {
     @Autowired
-    ProjectService projectService;
+    private ProjectService projectService;
 
     @GetMapping("/list/")
     public List<ProjectDTO> listProjects(){

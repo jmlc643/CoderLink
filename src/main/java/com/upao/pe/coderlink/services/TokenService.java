@@ -12,9 +12,9 @@ import java.util.UUID;
 @Service
 public class TokenService {
     @Autowired
-    TokenRepository tokenRepository;
+    private TokenRepository tokenRepository;
 
-    @Autowired EmailService emailService;
+    @Autowired private EmailService emailService;
 
     public void sendEmail(User user){
         String token = generateToken(user);

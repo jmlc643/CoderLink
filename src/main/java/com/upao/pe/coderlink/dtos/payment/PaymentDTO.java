@@ -4,15 +4,15 @@ import com.upao.pe.coderlink.dtos.offer.JobOfferDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
 public class PaymentDTO {
 
-    private LocalDate transactionDate;
+    private LocalDateTime transactionDate;
     private double total;
-    private LocalDate totalDate;
+    private LocalDateTime totalDate;
     private String paymentMethod;
     private String facturation;
     private String status;

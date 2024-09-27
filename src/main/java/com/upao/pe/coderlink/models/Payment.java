@@ -26,7 +26,7 @@ public class Payment {
     @Column(name = "total", nullable = false)
     private double total;
 
-    @Column(name = "totalDate", nullable = false)
+    @Column(name = "totalDate")
     private LocalDateTime totalDate;
 
     @Column(name = "payment_method", nullable = false)

@@ -24,10 +24,10 @@ import java.util.Optional;
 @Service
 public class ProjectService {
     @Autowired
-    ProjectRepository projectRepository;
-    @Autowired SkillService skillService;
+    private ProjectRepository projectRepository;
+    @Autowired private SkillService skillService;
     @Autowired
-    CustomerService customerService;
+    private CustomerService customerService;
 
     // CREATE
     public ProjectDTO createProject(CreateProjectRequest request){
@@ -42,7 +42,7 @@ public class ProjectService {
             skills.add(skillToList);
         });
         Customer customer = customerService.getCustomer(request.getUsername());
-        Project project = new Project(null, request.getName(), request.getDescription(), request.getMilestones(), request.getPresentation(), request.getRevision(), ProjectStatus.valueOf(request.getStatus().toUpperCase()), request.getCategory(), request.getQualification(), LocalDateTime.now(), null, customer, new ArrayList<>(), skills);
+        Project project = new Project(null, request.getName(), request.getDescription(), request.getMilestones(), request.getPresentation(), request.getRevision(), ProjectStatus.TODO, request.getCategory(), request.getQualification(), LocalDateTime.now(), null, customer, new ArrayList<>(), skills);
         return returnProjectDTO(projectRepository.save(project));
     }
 
@@ -90,6 +90,10 @@ public class ProjectService {
             throw new ResourceNotExistsException("This project has not been founded");
         }
         return project.get();
+    }
+
+    public void saveChanges(Project project){
+        projectRepository.saveAndFlush(project);
     }
 
 }
