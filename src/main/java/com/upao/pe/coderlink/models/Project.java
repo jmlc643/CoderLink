@@ -54,4 +54,9 @@ public class Project {
     // Mapear el uno a muchos con JobOffer
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private List<JobOffer> jobOffers;
+
+    // Mapear el muchos a muchos con Skill
+    @ManyToMany(fetch = FetchType.EAGER, targetEntity = Skill.class, cascade = CascadeType.PERSIST)
+    @JoinTable(name = "project_skills", joinColumns = @JoinColumn(name = "id_project"), inverseJoinColumns = @JoinColumn(name = "id_skill"))
+    private List<Skill> skills;
 }
