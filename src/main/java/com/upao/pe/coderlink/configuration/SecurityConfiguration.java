@@ -52,9 +52,10 @@ public class SecurityConfiguration {
                     auth.requestMatchers(HttpMethod.PATCH, "/auth/**").permitAll();
 
                     // Configure private endpoints
-                    auth.requestMatchers("/project/create/").hasRole("CUSTOMER");
-                    auth.requestMatchers("/offer/create/").hasRole("CUSTOMER");
-                    auth.requestMatchers("/postulation/create/").hasRole("DEVELOPER");
+                    //auth.requestMatchers(HttpMethod.POST, "/project/create/").hasAnyRole("CUSTOMER");
+                    //auth.requestMatchers(HttpMethod.DELETE, "/project/delete/**").hasAnyRole("CUSTOMER");
+                    //auth.requestMatchers(HttpMethod.POST, "/offer/create/").hasRole("CUSTOMER");
+                    auth.requestMatchers(HttpMethod.POST, "/postulation/create/").hasRole("DEVELOPER");
 
                     // Configure the others endpoints
                     auth.anyRequest().authenticated();

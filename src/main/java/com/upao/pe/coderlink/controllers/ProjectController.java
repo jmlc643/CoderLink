@@ -24,4 +24,9 @@ public class ProjectController {
     public ProjectDTO createProject(@Valid @RequestBody CreateProjectRequest request){
         return projectService.createProject(request);
     }
+
+    @DeleteMapping("/delete/{id}")
+    public List<ProjectDTO> deleteProject(@PathVariable Long id){
+        return projectService.deleteProject(id);
+    }
 }

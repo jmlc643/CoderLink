@@ -5,6 +5,7 @@ import com.upao.pe.coderlink.dtos.project.CreateProjectRequest;
 import com.upao.pe.coderlink.dtos.project.ProjectDTO;
 import com.upao.pe.coderlink.dtos.skill.CreateSkillRequest;
 import com.upao.pe.coderlink.dtos.skill.SkillDTO;
+import com.upao.pe.coderlink.exceptions.ResourceNotExistsException;
 import com.upao.pe.coderlink.models.JobOffer;
 import com.upao.pe.coderlink.models.Project;
 import com.upao.pe.coderlink.models.Skill;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProjectService {
@@ -36,6 +38,14 @@ public class ProjectService {
     public List<ProjectDTO> listProjects(){return projectRepository.findAll().stream().map(this::returnProjectDTO).toList();}
 
     // DELETE
+    public List<ProjectDTO> deleteProject(Long id){
+        Optional<Project> project = projectRepository.findById(id);
+        if(project.isEmpty()){
+            throw new ResourceNotExistsException("This project has not been founded");
+        }
+        projectRepository.delete(project.get());
+        return listProjects();
+    }
 
     // DTO
     public ProjectDTO returnProjectDTO(Project project) {
