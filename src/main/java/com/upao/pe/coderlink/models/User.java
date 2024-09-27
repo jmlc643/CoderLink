@@ -19,7 +19,7 @@ public class User {
     @Column(name = "id_user")
     private Long idUser;
 
-    @Column(name = "username")
+    @Column(name = "username", unique = true)
     private String username;
 
     @Column(name = "dni", length = 8)
@@ -31,7 +31,7 @@ public class User {
     @Column(name = "last_name", length = 50)
     private String lastName;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String email;
 
     @Column(name = "password")

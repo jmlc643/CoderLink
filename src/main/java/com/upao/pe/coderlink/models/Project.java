@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -26,12 +26,6 @@ public class Project {
 
     @Column(name = "description", nullable = false)
     private String description;
-
-    @Column(name = "budget", nullable = false)
-    private double budget;
-
-    @Column(name = "duration", nullable = false)
-    private LocalDate duration;
 
     @Column(name = "milestones", nullable = false)
     private String milestones;
@@ -53,23 +47,22 @@ public class Project {
     private String qualification;
 
     @Column(name = "created_at", nullable = false)
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
-    private LocalDate updatedAt;
+    private LocalDateTime updatedAt;
 
     // Mapear el muchos a uno con Customer
     @ManyToOne
     @JoinColumn(name = "id_customer", nullable = false)
     private Customer customer;
 
+    // Mapear el uno a muchos con Postulation
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    private List<Postulation> postulations;
 
     // Mapear el muchos a muchos con Skill
     @ManyToMany(fetch = FetchType.EAGER, targetEntity = Skill.class, cascade = CascadeType.PERSIST)
     @JoinTable(name = "project_skills", joinColumns = @JoinColumn(name = "id_project"), inverseJoinColumns = @JoinColumn(name = "id_skill"))
     private List<Skill> skills;
-
-    // Mapear el uno a muchos con Postulations
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
-    private List<Postulation> postulations;
 }

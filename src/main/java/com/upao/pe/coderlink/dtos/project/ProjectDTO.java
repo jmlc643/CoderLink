@@ -5,7 +5,7 @@ import com.upao.pe.coderlink.dtos.skill.SkillDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -19,7 +19,7 @@ public class ProjectDTO {
     private String status;
     private String category;
     private String qualification;
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
     private List<SkillDTO> skills;
     private List<PostulationDTO> postulations;
 }

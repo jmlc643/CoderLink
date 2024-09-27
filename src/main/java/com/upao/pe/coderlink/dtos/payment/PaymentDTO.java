@@ -1,5 +1,6 @@
 package com.upao.pe.coderlink.dtos.payment;
 
+import com.upao.pe.coderlink.dtos.offer.JobOfferDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -14,5 +15,6 @@ public class PaymentDTO {
     private LocalDate totalDate;
     private String paymentMethod;
     private String facturation;
-    private LocalDate createdAt;
+    private String status;
+    private JobOfferDTO jobOffer;
 }

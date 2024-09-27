@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -21,13 +21,13 @@ public class Payment {
     private Long idPayment;
 
     @Column(name = "transaction_date", nullable = false)
-    private LocalDate transactionDate;
+    private LocalDateTime transactionDate;
 
     @Column(name = "total", nullable = false)
     private double total;
 
     @Column(name = "totalDate", nullable = false)
-    private LocalDate totalDate;
+    private LocalDateTime totalDate;
 
     @Column(name = "payment_method", nullable = false)
     private String paymentMethod;
@@ -36,14 +36,14 @@ public class Payment {
     private String facturation;
 
     @Column(name = "updated_at")
-    private LocalDate updatedAt;
+    private LocalDateTime updatedAt;
 
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     private PaymentStatus status;
 
-    // Mapear el uno a uno con Project
+    // Mapear el uno a uno con JobOffer
     @OneToOne
-    @JoinColumn(name = "id_project", nullable = false)
-    private Project project;
+    @JoinColumn(name = "id_offer", nullable = false)
+    private JobOffer jobOffer;
 }

@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -41,7 +42,7 @@ public class ProjectService {
             skills.add(skillToList);
         });
         Customer customer = customerService.getCustomer(request.getUsername());
-        Project project = new Project(null, request.getName(), request.getDescription(), request.getBudget(), request.getDuration(), request.getMilestones(), request.getPresentation(), request.getRevision(), ProjectStatus.valueOf(request.getStatus().toUpperCase()), request.getCategory(), request.getQualification(), LocalDate.now(), null, customer, skills, new ArrayList<>());
+        Project project = new Project(null, request.getName(), request.getDescription(), request.getMilestones(), request.getPresentation(), request.getRevision(), ProjectStatus.valueOf(request.getStatus().toUpperCase()), request.getCategory(), request.getQualification(), LocalDateTime.now(), null, customer, new ArrayList<>(), skills);
         return returnProjectDTO(projectRepository.save(project));
     }
 
@@ -64,7 +65,7 @@ public class ProjectService {
             skills.add(skillDTO);
         }
         for(Postulation postulation : project.getPostulations()){
-            PostulationDTO postulationDTO = new PostulationDTO(postulation.getPublicationDate(), postulation.getStatus().toString());
+            PostulationDTO postulationDTO = new PostulationDTO(postulation.getDeveloper().getUsername(), postulation.getPublicationDate(), postulation.getStatus().toString());
             postulations.add(postulationDTO);
         }
         return new ProjectDTO(project.getName(), project.getDescription(), project.getMilestones(), project.getPresentation(), project.getRevision(), project.getStatus().toString(), project.getCategory(), project.getQualification(), project.getCreatedAt(), skills, postulations);

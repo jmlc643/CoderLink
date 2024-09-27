@@ -23,7 +23,10 @@ public class Customer extends User{
     @Column(name = "phone", nullable = false)
     private int phone;
 
-    // Mapear uno a muchos con JobOffer
+    // Mapear uno a muchos con JobOffer y Project
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     private List<Project> projects;
+
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+    private List<JobOffer> offers;
 }

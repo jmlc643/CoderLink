@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -21,7 +21,7 @@ public class Postulation {
     private Long idPostulation;
 
     @Column(name = "publication_date", nullable = false)
-    private LocalDate publicationDate;
+    private LocalDateTime publicationDate;
 
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
