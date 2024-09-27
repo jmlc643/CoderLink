@@ -1,5 +1,6 @@
 package com.upao.pe.coderlink.models;
 
+import com.upao.pe.coderlink.models.enums.ProjectStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,6 +27,12 @@ public class Project {
     @Column(name = "description", nullable = false)
     private String description;
 
+    @Column(name = "budget", nullable = false)
+    private double budget;
+
+    @Column(name = "duration", nullable = false)
+    private LocalDate duration;
+
     @Column(name = "milestones", nullable = false)
     private String milestones;
 
@@ -36,7 +43,8 @@ public class Project {
     private String revision;
 
     @Column(name = "status", nullable = false)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private ProjectStatus status;
 
     @Column(name = "category", nullable = false)
     private String category;
@@ -50,12 +58,18 @@ public class Project {
     @Column(name = "updated_at")
     private LocalDate updatedAt;
 
-    // Mapear el uno a muchos con JobOffer
-    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
-    private List<JobOffer> jobOffers;
+    // Mapear el muchos a uno con Customer
+    @ManyToOne
+    @JoinColumn(name = "id_customer", nullable = false)
+    private Customer customer;
+
 
     // Mapear el muchos a muchos con Skill
     @ManyToMany(fetch = FetchType.EAGER, targetEntity = Skill.class, cascade = CascadeType.PERSIST)
     @JoinTable(name = "project_skills", joinColumns = @JoinColumn(name = "id_project"), inverseJoinColumns = @JoinColumn(name = "id_skill"))
     private List<Skill> skills;
+
+    // Mapear el uno a muchos con Postulations
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+    private List<Postulation> postulations;
 }

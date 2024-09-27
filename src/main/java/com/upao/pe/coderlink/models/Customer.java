@@ -25,5 +25,5 @@ public class Customer extends User{
 
     // Mapear uno a muchos con JobOffer
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
-    private List<JobOffer> jobOffers;
+    private List<Project> projects;
 }

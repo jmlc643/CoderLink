@@ -2,11 +2,15 @@ package com.upao.pe.coderlink.services;
 
 import com.upao.pe.coderlink.dtos.customer.CreateCustomerRequest;
 import com.upao.pe.coderlink.dtos.customer.CustomerDTO;
-import com.upao.pe.coderlink.dtos.joboffer.JobOfferDTO;
+import com.upao.pe.coderlink.dtos.postulation.PostulationDTO;
+import com.upao.pe.coderlink.dtos.project.ProjectDTO;
+import com.upao.pe.coderlink.dtos.skill.SkillDTO;
 import com.upao.pe.coderlink.exceptions.ResourceExistsException;
 import com.upao.pe.coderlink.exceptions.ResourceNotExistsException;
 import com.upao.pe.coderlink.models.Customer;
-import com.upao.pe.coderlink.models.JobOffer;
+import com.upao.pe.coderlink.models.Postulation;
+import com.upao.pe.coderlink.models.Project;
+import com.upao.pe.coderlink.models.Skill;
 import com.upao.pe.coderlink.models.enums.TypeUser;
 import com.upao.pe.coderlink.repos.CustomerRepository;
 import com.upao.pe.coderlink.repos.UserRepository;
@@ -24,6 +28,8 @@ public class CustomerService {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired ProjectService projectService;
 
     // CREATE
     public Customer createCustomer(CreateCustomerRequest request){
@@ -54,19 +60,29 @@ public class CustomerService {
 
     // DTO
     public CustomerDTO returnCustomerDTO(Customer customer){
-        List<JobOfferDTO> offers = new ArrayList<>();
-        for(JobOffer jobOffer: customer.getJobOffers()){
-            JobOfferDTO jobOfferDTO = new JobOfferDTO(jobOffer.getDescription(), jobOffer.getBudget(), jobOffer.getDuration(), jobOffer.getPublicationDate());
-            offers.add(jobOfferDTO);
+        List<ProjectDTO> projects = new ArrayList<>();
+        for(Project project: customer.getProjects()){
+            List<SkillDTO> skills = new ArrayList<>();
+            List<PostulationDTO> postulations = new ArrayList<>();
+            for(Skill skill : project.getSkills()) {
+                SkillDTO skillDTO = new SkillDTO(skill.getName());
+                skills.add(skillDTO);
+            }
+            for(Postulation postulation : project.getPostulations()){
+                PostulationDTO postulationDTO = new PostulationDTO(postulation.getPublicationDate(), postulation.getStatus().toString());
+                postulations.add(postulationDTO);
+            }
+            ProjectDTO projectDTO = new ProjectDTO(project.getName(), project.getDescription(), project.getMilestones(), project.getPresentation(), project.getRevision(), project.getStatus().toString(), project.getCategory(), project.getQualification(), project.getCreatedAt(), skills, postulations);
+            projects.add(projectDTO);
         }
-        return new CustomerDTO(customer.getUsername(), customer.getNames(), customer.getLastName(), customer.getEmail(), customer.getCompanyName(), customer.getRuc(), customer.getPhone(), offers);
+        return new CustomerDTO(customer.getUsername(), customer.getNames(), customer.getLastName(), customer.getEmail(), customer.getCompanyName(), customer.getRuc(), customer.getPhone(), projects);
     }
 
     // GET CUSTOMER
-    public Customer getCustomer(String companyName){
-        Optional<Customer> customer = customerRepository.findByCompanyName(companyName);
+    public Customer getCustomer(String username){
+        Optional<Customer> customer = customerRepository.findByUsername(username);
         if(customer.isEmpty()){
-            throw new ResourceNotExistsException("Company "+companyName+" has not been found");
+            throw new ResourceNotExistsException("Customer "+username+" has not been found");
         }
         return customer.get();
     }

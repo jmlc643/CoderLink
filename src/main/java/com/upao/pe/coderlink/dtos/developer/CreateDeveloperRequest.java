@@ -1,6 +1,5 @@
 package com.upao.pe.coderlink.dtos.developer;
 
-import com.upao.pe.coderlink.models.Skill;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -44,5 +43,5 @@ public class CreateDeveloperRequest {
     private String workExperience;
     @NotNull(message = "Null Data")
     private int yearsExperience;
-    private List<Skill> skills;
+    private List<String> skills;
 }

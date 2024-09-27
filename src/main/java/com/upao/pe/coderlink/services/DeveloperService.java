@@ -33,11 +33,17 @@ public class DeveloperService {
 
     // CREATE
     public Developer createDeveloper(CreateDeveloperRequest request){
+        List<Skill> skills = new ArrayList<>();
         request.getSkills().forEach(skill -> {
-            CreateSkillRequest skillRequest = new CreateSkillRequest(skill.getName(), skill.getDescription());
-            skillService.createSkill(skillRequest);
+            Skill skillToList;
+            if(skillService.getSkill(skill) != null){
+                skillToList = skillService.getSkill(skill);
+            } else{
+                skillToList = skillService.createSkill(new CreateSkillRequest(skill));
+            }
+            skills.add(skillToList);
         });
-        Developer developer = new Developer(request.getPortfolio(), request.getHoursWorked(), request.getPaymentRate(), request.getWorkExperience(), request.getYearsExperience(), new ArrayList<>(), request.getSkills());
+        Developer developer = new Developer(request.getPortfolio(), request.getHoursWorked(), request.getPaymentRate(), request.getWorkExperience(), request.getYearsExperience(), new ArrayList<>(), skills);
         if(userRepository.existsUserByUsername(developer.getUsername())){
             throw new ResourceExistsException("User "+developer.getUsername()+" exists");
         }
@@ -70,7 +76,7 @@ public class DeveloperService {
             postulations.add(postulationDTO);
         }
         for(Skill skill : developer.getSkills()){
-            SkillDTO skillDTO = new SkillDTO(skill.getName(), skill.getDescription());
+            SkillDTO skillDTO = skillService.returnSkillDTO(skill);
             skills.add(skillDTO);
         }
         return new DeveloperDTO(developer.getUsername(), developer.getNames(), developer.getLastName(), developer.getEmail(), developer.getPortafolio(), developer.getHoursWorked(), developer.getPaymentRate(), developer.getWorkExperience(), developer.getYearsExperience(), postulations, skills);

@@ -1,5 +1,6 @@
 package com.upao.pe.coderlink.models;
 
+import com.upao.pe.coderlink.models.enums.PostulationStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,7 +24,8 @@ public class Postulation {
     private LocalDate publicationDate;
 
     @Column(name = "status", nullable = false)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private PostulationStatus status;
 
     // Mapeo Muchos a uno con Developer y Offer
     @ManyToOne
@@ -31,6 +33,6 @@ public class Postulation {
     private Developer developer;
 
     @ManyToOne
-    @JoinColumn(name = "id_offer", nullable = false)
-    private JobOffer jobOffer;
+    @JoinColumn(name = "id_project", nullable = false)
+    private Project project;
 }

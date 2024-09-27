@@ -1,5 +1,6 @@
 package com.upao.pe.coderlink.models;
 
+import com.upao.pe.coderlink.models.enums.PaymentStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -34,14 +35,15 @@ public class Payment {
     @Column(name = "facturation", nullable = false)
     private String facturation;
 
-    @Column(name = "created_at", nullable = false)
-    private LocalDate createdAt;
-
     @Column(name = "updated_at")
     private LocalDate updatedAt;
 
-    // Mapear el muchos a uno con JobOffer
-    @ManyToOne
-    @JoinColumn(name = "id_offer", nullable = false)
-    private JobOffer jobOffer;
+    @Column(name = "status", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus status;
+
+    // Mapear el uno a uno con Project
+    @OneToOne
+    @JoinColumn(name = "id_project", nullable = false)
+    private Project project;
 }

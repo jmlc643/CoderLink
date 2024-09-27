@@ -1,6 +1,6 @@
 package com.upao.pe.coderlink.dtos.project;
 
-import com.upao.pe.coderlink.dtos.joboffer.JobOfferDTO;
+import com.upao.pe.coderlink.dtos.postulation.PostulationDTO;
 import com.upao.pe.coderlink.dtos.skill.SkillDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,6 +20,6 @@ public class ProjectDTO {
     private String category;
     private String qualification;
     private LocalDate createdAt;
-    private List<JobOfferDTO> offers;
     private List<SkillDTO> skills;
+    private List<PostulationDTO> postulations;
 }

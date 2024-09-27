@@ -7,16 +7,24 @@ import com.upao.pe.coderlink.repos.SkillRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class SkillService {
 
     @Autowired private SkillRepository skillRepository;
 
-    public void createSkill(CreateSkillRequest request){
-        new Skill(null, request.getName(), request.getDescription());
+    public Skill createSkill(CreateSkillRequest request){
+        Skill skill = new Skill(null, request.getName());
+        return skillRepository.save(skill);
     }
 
     public SkillDTO returnSkillDTO(Skill skill){
-        return new SkillDTO(skill.getName(), skill.getDescription());
+        return new SkillDTO(skill.getName());
+    }
+
+    public Skill getSkill(String name){
+        Optional<Skill> skill = skillRepository.findByName(name);
+        return skill.orElse(null);
     }
 }

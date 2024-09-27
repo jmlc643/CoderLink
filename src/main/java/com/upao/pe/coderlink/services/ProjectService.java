@@ -1,14 +1,16 @@
 package com.upao.pe.coderlink.services;
 
-import com.upao.pe.coderlink.dtos.joboffer.JobOfferDTO;
+import com.upao.pe.coderlink.dtos.postulation.PostulationDTO;
 import com.upao.pe.coderlink.dtos.project.CreateProjectRequest;
 import com.upao.pe.coderlink.dtos.project.ProjectDTO;
 import com.upao.pe.coderlink.dtos.skill.CreateSkillRequest;
 import com.upao.pe.coderlink.dtos.skill.SkillDTO;
 import com.upao.pe.coderlink.exceptions.ResourceNotExistsException;
-import com.upao.pe.coderlink.models.JobOffer;
+import com.upao.pe.coderlink.models.Customer;
+import com.upao.pe.coderlink.models.Postulation;
 import com.upao.pe.coderlink.models.Project;
 import com.upao.pe.coderlink.models.Skill;
+import com.upao.pe.coderlink.models.enums.ProjectStatus;
 import com.upao.pe.coderlink.repos.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,14 +25,23 @@ public class ProjectService {
     @Autowired
     ProjectRepository projectRepository;
     @Autowired SkillService skillService;
+    @Autowired
+    CustomerService customerService;
 
     // CREATE
     public ProjectDTO createProject(CreateProjectRequest request){
+        List<Skill> skills = new ArrayList<>();
         request.getSkills().forEach(skill -> {
-            CreateSkillRequest skillRequest = new CreateSkillRequest(skill.getName(), skill.getDescription());
-            skillService.createSkill(skillRequest);
+            Skill skillToList;
+            if(skillService.getSkill(skill) != null){
+                skillToList = skillService.getSkill(skill);
+            } else{
+                skillToList = skillService.createSkill(new CreateSkillRequest(skill));
+            }
+            skills.add(skillToList);
         });
-        Project project = new Project(null, request.getName(), request.getDescription(), request.getMilestones(), request.getPresentation(), request.getRevision(), request.getStatus(), request.getCategory(), request.getQualification(), LocalDate.now(), null, new ArrayList<>(), request.getSkills());
+        Customer customer = customerService.getCustomer(request.getUsername());
+        Project project = new Project(null, request.getName(), request.getDescription(), request.getBudget(), request.getDuration(), request.getMilestones(), request.getPresentation(), request.getRevision(), ProjectStatus.valueOf(request.getStatus().toUpperCase()), request.getCategory(), request.getQualification(), LocalDate.now(), null, customer, skills, new ArrayList<>());
         return returnProjectDTO(projectRepository.save(project));
     }
 
@@ -47,16 +58,16 @@ public class ProjectService {
     // DTO
     public ProjectDTO returnProjectDTO(Project project) {
         List<SkillDTO> skills = new ArrayList<>();
-        List<JobOfferDTO> offers = new ArrayList<>();
-        for(JobOffer jobOffer : project.getJobOffers()) {
-            JobOfferDTO jobOfferDTO = new JobOfferDTO(jobOffer.getDescription(), jobOffer.getBudget(), jobOffer.getDuration(), jobOffer.getPublicationDate());
-            offers.add(jobOfferDTO);
-        }
+        List<PostulationDTO> postulations = new ArrayList<>();
         for(Skill skill : project.getSkills()) {
-            SkillDTO skillDTO = new SkillDTO(skill.getName(), skill.getDescription());
+            SkillDTO skillDTO = new SkillDTO(skill.getName());
             skills.add(skillDTO);
         }
-        return new ProjectDTO(project.getName(), project.getDescription(), project.getMilestones(), project.getPresentation(), project.getRevision(), project.getStatus(), project.getCategory(), project.getQualification(), project.getCreatedAt(), offers, skills);
+        for(Postulation postulation : project.getPostulations()){
+            PostulationDTO postulationDTO = new PostulationDTO(postulation.getPublicationDate(), postulation.getStatus().toString());
+            postulations.add(postulationDTO);
+        }
+        return new ProjectDTO(project.getName(), project.getDescription(), project.getMilestones(), project.getPresentation(), project.getRevision(), project.getStatus().toString(), project.getCategory(), project.getQualification(), project.getCreatedAt(), skills, postulations);
     }
 
     // Search

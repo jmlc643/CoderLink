@@ -7,5 +7,4 @@ import lombok.Data;
 @AllArgsConstructor
 public class SkillDTO {
     private String name;
-    private String description;
 }
