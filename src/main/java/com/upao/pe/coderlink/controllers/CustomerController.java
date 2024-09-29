@@ -15,4 +15,9 @@ public class CustomerController {
 
     @GetMapping("/list/")
     public List<CustomerDTO> listCustomers(){return customerService.listCustomer();}
+
+    @GetMapping("/get-customer/{username}")
+    public CustomerDTO getCustomer(@PathVariable String username){
+        return customerService.returnCustomerDTO(customerService.getCustomer(username));
+    }
 }

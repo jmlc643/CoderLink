@@ -15,7 +15,6 @@ import com.upao.pe.coderlink.repos.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -68,7 +67,7 @@ public class ProjectService {
             PostulationDTO postulationDTO = new PostulationDTO(postulation.getDeveloper().getUsername(), postulation.getPublicationDate(), postulation.getStatus().toString());
             postulations.add(postulationDTO);
         }
-        return new ProjectDTO(project.getName(), project.getDescription(), project.getMilestones(), project.getPresentation(), project.getRevision(), project.getStatus().toString(), project.getCategory(), project.getQualification(), project.getCreatedAt(), skills, postulations);
+        return new ProjectDTO(project.getIdProject(), project.getName(), project.getDescription(), project.getMilestones(), project.getPresentation(), project.getRevision(), project.getStatus().toString(), project.getCategory(), project.getQualification(), project.getCreatedAt(), skills, postulations);
     }
 
     // Search

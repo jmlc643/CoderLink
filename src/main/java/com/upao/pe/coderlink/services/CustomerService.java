@@ -69,7 +69,7 @@ public class CustomerService {
                 PostulationDTO postulationDTO = new PostulationDTO(postulation.getDeveloper().getUsername(), postulation.getPublicationDate(), postulation.getStatus().toString());
                 postulations.add(postulationDTO);
             }
-            ProjectDTO projectDTO = new ProjectDTO(project.getName(), project.getDescription(), project.getMilestones(), project.getPresentation(), project.getRevision(), project.getStatus().toString(), project.getCategory(), project.getQualification(), project.getCreatedAt(), skills, postulations);
+            ProjectDTO projectDTO = new ProjectDTO(project.getIdProject(), project.getName(), project.getDescription(), project.getMilestones(), project.getPresentation(), project.getRevision(), project.getStatus().toString(), project.getCategory(), project.getQualification(), project.getCreatedAt(), skills, postulations);
             projects.add(projectDTO);
         }
         for(JobOffer offer : customer.getOffers()){
