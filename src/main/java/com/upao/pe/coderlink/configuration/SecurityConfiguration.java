@@ -52,11 +52,6 @@ public class SecurityConfiguration {
                     auth.requestMatchers(HttpMethod.PATCH, "/auth/**").permitAll();
                     auth.requestMatchers(HttpMethod.OPTIONS, "/auth/**").permitAll();
                     // Configure the others endpoints
-                    auth.requestMatchers(HttpMethod.GET, "/customer/**").permitAll();
-                    auth.requestMatchers(HttpMethod.POST, "/customer/**").permitAll();
-                    auth.requestMatchers(HttpMethod.PATCH, "/customer/**").permitAll();
-                    auth.requestMatchers(HttpMethod.OPTIONS, "/customer/**").permitAll();
-
                     auth.anyRequest().permitAll();
                 })
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
