@@ -22,9 +22,6 @@ public class User {
     @Column(name = "username", unique = true)
     private String username;
 
-    @Column(name = "dni", length = 8)
-    private int dni;
-
     @Column(name = "names", length = 50)
     private String names;
 

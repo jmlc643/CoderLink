@@ -10,8 +10,6 @@ public class CreateCustomerRequest {
     @NotEmpty(message = "Empty Data")
     @NotBlank(message = "A data with only blank spaces is not valid")
     private String username;
-    @NotNull(message = "Null Data")
-    private int dni;
     @NotEmpty(message = "Empty Data")
     @NotBlank(message = "A data with only blank spaces is not valid")
     private String names;
@@ -28,11 +26,4 @@ public class CreateCustomerRequest {
     @NotEmpty(message = "Empty Data")
     @NotBlank(message = "A data with only blank spaces is not valid")
     private String typeUser;
-    @NotEmpty(message = "Empty Data")
-    @NotBlank(message = "A data with only blank spaces is not valid")
-    private String companyName;
-    @NotNull(message = "Null Data")
-    private int ruc;
-    @NotNull(message = "Null Data")
-    private int phone;
 }

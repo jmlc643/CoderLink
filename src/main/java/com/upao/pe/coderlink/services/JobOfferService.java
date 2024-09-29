@@ -31,7 +31,7 @@ public class JobOfferService {
         Postulation postulation = postulationService.getPostulation(request.getPostulationId());
         postulation.setStatus(PostulationStatus.OFFER);
         postulationService.saveChanges(postulation);
-        JobOffer jobOffer = new JobOffer(null, request.getMessage(), request.getBudget(), request.getDuration(), LocalDateTime.now(), customer, postulation);
+        JobOffer jobOffer = new JobOffer(null, request.getBudget(), LocalDateTime.now(), customer, postulation);
         return returnJobOfferDTO(jobOfferRepository.save(jobOffer));
     }
 
@@ -43,7 +43,7 @@ public class JobOfferService {
     // DTO
     public JobOfferDTO returnJobOfferDTO(JobOffer jobOffer){
         PostulationDTO postulationDTO = new PostulationDTO(jobOffer.getPostulation().getIdPostulation(), jobOffer.getPostulation().getDeveloper().getUsername(), jobOffer.getPostulation().getPublicationDate(), jobOffer.getPostulation().getStatus().toString());
-        return new JobOfferDTO(jobOffer.getMessage(), jobOffer.getBudget(), jobOffer.getDuration(), jobOffer.getPublicationDate(), postulationDTO);
+        return new JobOfferDTO(jobOffer.getBudget(), jobOffer.getPublicationDate(), postulationDTO);
     }
 
     public JobOffer getJobOffer(Long id){

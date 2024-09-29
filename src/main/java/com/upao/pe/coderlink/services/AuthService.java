@@ -1,5 +1,6 @@
 package com.upao.pe.coderlink.services;
 
+import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.upao.pe.coderlink.dtos.customer.CreateCustomerRequest;
 import com.upao.pe.coderlink.dtos.customer.CustomerDTO;
@@ -149,5 +150,12 @@ public class AuthService {
         DecodedJWT decodedJWT = jwtUtils.validateJWT(token);
         String username = jwtUtils.extractUsername(decodedJWT);
         return new GetUserResponse(username);
+    }
+
+    public GetAuthorities obtainAuthoritiesByToken(String token){
+        DecodedJWT decodedJWT = jwtUtils.validateJWT(token);
+        Claim claim = jwtUtils.extractSpecificClaim(decodedJWT, "authorities");
+        return new GetAuthorities(claim.asString());
+
     }
 }

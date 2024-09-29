@@ -27,9 +27,6 @@ public class Project {
     @Column(name = "description", nullable = false)
     private String description;
 
-    @Column(name = "milestones", nullable = false)
-    private String milestones;
-
     @Column(name = "presentation", nullable = false)
     private String presentation;
 
@@ -60,9 +57,4 @@ public class Project {
     // Mapear el uno a muchos con Postulation
     @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
     private List<Postulation> postulations;
-
-    // Mapear el muchos a muchos con Skill
-    @ManyToMany(fetch = FetchType.EAGER, targetEntity = Skill.class, cascade = CascadeType.PERSIST)
-    @JoinTable(name = "project_skills", joinColumns = @JoinColumn(name = "id_project"), inverseJoinColumns = @JoinColumn(name = "id_skill"))
-    private List<Skill> skills;
 }

@@ -9,14 +9,8 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class CreateJobOfferRequest {
-    @NotEmpty(message = "Empty Data")
-    @NotBlank(message = "A data with only blank spaces is not valid")
-    private String message;
     @NotNull(message = "Null Data")
     private double budget;
-    @NotEmpty(message = "Empty Data")
-    @NotBlank(message = "A data with only blank spaces is not valid")
-    private String duration;
     @NotEmpty(message = "Empty Data")
     @NotBlank(message = "A data with only blank spaces is not valid")
     private String customerUsername;

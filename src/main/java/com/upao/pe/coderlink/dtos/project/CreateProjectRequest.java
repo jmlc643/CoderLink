@@ -22,9 +22,6 @@ public class CreateProjectRequest {
     private double budget;
     @NotEmpty(message = "Empty Data")
     @NotBlank(message = "A data with only blank spaces is not valid")
-    private String milestones;
-    @NotEmpty(message = "Empty Data")
-    @NotBlank(message = "A data with only blank spaces is not valid")
     private String presentation;
     @NotEmpty(message = "Empty Data")
     @NotBlank(message = "A data with only blank spaces is not valid")
@@ -38,5 +35,4 @@ public class CreateProjectRequest {
     @NotEmpty(message = "Empty Data")
     @NotBlank(message = "A data with only blank spaces is not valid")
     private String username;
-    private List<String> skills;
 }

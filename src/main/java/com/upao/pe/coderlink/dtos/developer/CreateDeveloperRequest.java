@@ -12,8 +12,6 @@ public class CreateDeveloperRequest {
     @NotEmpty(message = "Empty Data")
     @NotBlank(message = "A data with only blank spaces is not valid")
     private String username;
-    @NotNull(message = "Null Data")
-    private int dni;
     @NotEmpty(message = "Empty Data")
     @NotBlank(message = "A data with only blank spaces is not valid")
     private String names;
@@ -33,15 +31,11 @@ public class CreateDeveloperRequest {
     @NotEmpty(message = "Empty Data")
     @NotBlank(message = "A data with only blank spaces is not valid")
     private String portfolio;
-    @NotNull(message = "Null Data")
-    private int hoursWorked;
     @NotEmpty(message = "Empty Data")
     @NotBlank(message = "A data with only blank spaces is not valid")
     private String paymentRate;
     @NotEmpty(message = "Empty Data")
     @NotBlank(message = "A data with only blank spaces is not valid")
     private String workExperience;
-    @NotNull(message = "Null Data")
-    private int yearsExperience;
     private List<String> skills;
 }

@@ -3,13 +3,11 @@ package com.upao.pe.coderlink.services;
 import com.upao.pe.coderlink.dtos.postulation.PostulationDTO;
 import com.upao.pe.coderlink.dtos.project.CreateProjectRequest;
 import com.upao.pe.coderlink.dtos.project.ProjectDTO;
-import com.upao.pe.coderlink.dtos.skill.CreateSkillRequest;
 import com.upao.pe.coderlink.dtos.skill.SkillDTO;
 import com.upao.pe.coderlink.exceptions.ResourceNotExistsException;
 import com.upao.pe.coderlink.models.Customer;
 import com.upao.pe.coderlink.models.Postulation;
 import com.upao.pe.coderlink.models.Project;
-import com.upao.pe.coderlink.models.Skill;
 import com.upao.pe.coderlink.models.enums.ProjectStatus;
 import com.upao.pe.coderlink.repos.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,24 +22,13 @@ import java.util.Optional;
 public class ProjectService {
     @Autowired
     private ProjectRepository projectRepository;
-    @Autowired private SkillService skillService;
     @Autowired
     private CustomerService customerService;
 
     // CREATE
     public ProjectDTO createProject(CreateProjectRequest request){
-        List<Skill> skills = new ArrayList<>();
-        request.getSkills().forEach(skill -> {
-            Skill skillToList;
-            if(skillService.getSkill(skill) != null){
-                skillToList = skillService.getSkill(skill);
-            } else{
-                skillToList = skillService.createSkill(new CreateSkillRequest(skill));
-            }
-            skills.add(skillToList);
-        });
         Customer customer = customerService.getCustomer(request.getUsername());
-        Project project = new Project(null, request.getName(), request.getDescription(), request.getMilestones(), request.getPresentation(), request.getRevision(), ProjectStatus.TODO, request.getCategory(), request.getQualification(), LocalDateTime.now(), null, customer, new ArrayList<>(), skills);
+        Project project = new Project(null, request.getName(), request.getDescription(), request.getPresentation(), request.getRevision(), ProjectStatus.TODO, request.getCategory(), request.getQualification(), LocalDateTime.now(), null, customer, new ArrayList<>());
         return returnProjectDTO(projectRepository.save(project));
     }
 
@@ -59,15 +46,11 @@ public class ProjectService {
     public ProjectDTO returnProjectDTO(Project project) {
         List<SkillDTO> skills = new ArrayList<>();
         List<PostulationDTO> postulations = new ArrayList<>();
-        for(Skill skill : project.getSkills()) {
-            SkillDTO skillDTO = new SkillDTO(skill.getName());
-            skills.add(skillDTO);
-        }
         for(Postulation postulation : project.getPostulations()){
             PostulationDTO postulationDTO = new PostulationDTO(postulation.getIdPostulation(), postulation.getDeveloper().getUsername(), postulation.getPublicationDate(), postulation.getStatus().toString());
             postulations.add(postulationDTO);
         }
-        return new ProjectDTO(project.getIdProject(), project.getName(), project.getDescription(), project.getMilestones(), project.getPresentation(), project.getRevision(), project.getStatus().toString(), project.getCategory(), project.getQualification(), project.getCreatedAt(), skills, postulations);
+        return new ProjectDTO(project.getIdProject(), project.getName(), project.getDescription(), project.getPresentation(), project.getRevision(), project.getStatus().toString(), project.getCategory(), project.getQualification(), project.getCreatedAt(), postulations);
     }
 
     // Search

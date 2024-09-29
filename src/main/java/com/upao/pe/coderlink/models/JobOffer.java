@@ -19,14 +19,8 @@ public class JobOffer {
     @Column(name = "id_offer")
     private Long idOffer;
 
-    @Column(name = "message", nullable = false)
-    private String message;
-
     @Column(name = "budget", nullable = false)
     private double budget;
-
-    @Column(name = "duration", nullable = false)
-    private String duration;
 
     @Column(name = "publication_date", nullable = false)
     private LocalDateTime publicationDate;

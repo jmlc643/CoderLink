@@ -54,4 +54,9 @@ public class AuthController {
     public GetUserResponse getUserByToken(@RequestBody String token){
         return authService.obtainUsernameByToken(token);
     }
+
+    @PostMapping("/get-authorities-token/")
+    public GetAuthorities getAuthoritiesByToken(@RequestBody String token){
+        return authService.obtainAuthoritiesByToken(token);
+    }
 }

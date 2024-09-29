@@ -17,17 +17,11 @@ public class Developer extends User{
     @Column(name = "portafolio", length = 30, nullable = false)
     private String portafolio;
 
-    @Column(name = "hours_worked", nullable = false)
-    private int hoursWorked;
-
     @Column(name = "payment_rate", length = 30, nullable = false)
     private String paymentRate;
 
     @Column(name = "work_experience", length = 40, nullable = false)
     private String workExperience;
-
-    @Column(name = "years_experience", length = 10, nullable = false)
-    private int yearsExperience;
 
     // Mapear el uno a muchos con Postulation
     @OneToMany(mappedBy = "developer", cascade = CascadeType.ALL)

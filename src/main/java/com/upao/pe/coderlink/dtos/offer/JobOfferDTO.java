@@ -9,9 +9,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 public class JobOfferDTO {
-    private String message;
     private double budget;
-    private String duration;
     private LocalDateTime publicationDate;
     private PostulationDTO postulation;
 }

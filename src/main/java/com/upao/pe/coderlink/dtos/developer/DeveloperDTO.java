@@ -15,10 +15,8 @@ public class DeveloperDTO {
     private String lastNames;
     private String email;
     private String portfolio;
-    private int hoursWorked;
     private String paymentRate;
     private String workExperience;
-    private int yearsExperience;
     private List<PostulationDTO> postulations;
     private List<SkillDTO> skills;
 }

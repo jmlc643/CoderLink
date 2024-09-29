@@ -5,7 +5,6 @@ import com.upao.pe.coderlink.dtos.customer.CustomerDTO;
 import com.upao.pe.coderlink.dtos.offer.JobOfferDTO;
 import com.upao.pe.coderlink.dtos.postulation.PostulationDTO;
 import com.upao.pe.coderlink.dtos.project.ProjectDTO;
-import com.upao.pe.coderlink.dtos.skill.SkillDTO;
 import com.upao.pe.coderlink.exceptions.ResourceExistsException;
 import com.upao.pe.coderlink.exceptions.ResourceNotExistsException;
 import com.upao.pe.coderlink.models.*;
@@ -29,7 +28,7 @@ public class CustomerService {
 
     // CREATE
     public Customer createCustomer(CreateCustomerRequest request){
-        Customer customer = new Customer(request.getCompanyName(), request.getRuc(), request.getPhone(), new ArrayList<>(), new ArrayList<>());
+        Customer customer = new Customer(new ArrayList<>(), new ArrayList<>());
         if(userRepository.existsUserByNames(customer.getNames())){
             throw new ResourceExistsException("User "+customer.getNames()+" exists");
         }
@@ -37,7 +36,6 @@ public class CustomerService {
             throw new ResourceExistsException("User with email "+customer.getEmail()+" exists");
         }
         customer.setUsername(request.getUsername());
-        customer.setDni(request.getDni());
         customer.setNames(request.getNames());
         customer.setLastName(request.getLastName());
         customer.setEmail(request.getEmail());
@@ -59,25 +57,20 @@ public class CustomerService {
         List<ProjectDTO> projects = new ArrayList<>();
         List<JobOfferDTO> offers = new ArrayList<>();
         for(Project project: customer.getProjects()){
-            List<SkillDTO> skills = new ArrayList<>();
             List<PostulationDTO> postulations = new ArrayList<>();
-            for(Skill skill : project.getSkills()) {
-                SkillDTO skillDTO = new SkillDTO(skill.getName());
-                skills.add(skillDTO);
-            }
             for(Postulation postulation : project.getPostulations()){
                 PostulationDTO postulationDTO = new PostulationDTO(postulation.getIdPostulation(), postulation.getDeveloper().getUsername(), postulation.getPublicationDate(), postulation.getStatus().toString());
                 postulations.add(postulationDTO);
             }
-            ProjectDTO projectDTO = new ProjectDTO(project.getIdProject(), project.getName(), project.getDescription(), project.getMilestones(), project.getPresentation(), project.getRevision(), project.getStatus().toString(), project.getCategory(), project.getQualification(), project.getCreatedAt(), skills, postulations);
+            ProjectDTO projectDTO = new ProjectDTO(project.getIdProject(), project.getName(), project.getDescription(), project.getPresentation(), project.getRevision(), project.getStatus().toString(), project.getCategory(), project.getQualification(), project.getCreatedAt(), postulations);
             projects.add(projectDTO);
         }
         for(JobOffer offer : customer.getOffers()){
             PostulationDTO postulationDTO = new PostulationDTO(offer.getPostulation().getIdPostulation(), offer.getPostulation().getDeveloper().getUsername(), offer.getPostulation().getPublicationDate(), offer.getPostulation().getStatus().toString());
-            JobOfferDTO jobOfferDTO = new JobOfferDTO(offer.getMessage(), offer.getBudget(), offer.getDuration(), offer.getPublicationDate(), postulationDTO);
+            JobOfferDTO jobOfferDTO = new JobOfferDTO(offer.getBudget(), offer.getPublicationDate(), postulationDTO);
             offers.add(jobOfferDTO);
         }
-        return new CustomerDTO(customer.getUsername(), customer.getNames(), customer.getLastName(), customer.getEmail(), customer.getCompanyName(), customer.getRuc(), customer.getPhone(), projects, offers);
+        return new CustomerDTO(customer.getUsername(), customer.getNames(), customer.getLastName(), customer.getEmail(), projects, offers);
     }
 
     // GET CUSTOMER

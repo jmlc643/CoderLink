@@ -43,7 +43,7 @@ public class DeveloperService {
             }
             skills.add(skillToList);
         });
-        Developer developer = new Developer(request.getPortfolio(), request.getHoursWorked(), request.getPaymentRate(), request.getWorkExperience(), request.getYearsExperience(), new ArrayList<>(), skills);
+        Developer developer = new Developer(request.getPortfolio(), request.getPaymentRate(), request.getWorkExperience(), new ArrayList<>(), skills);
         if(userRepository.existsUserByUsername(developer.getUsername())){
             throw new ResourceExistsException("User "+developer.getUsername()+" exists");
         }
@@ -51,7 +51,6 @@ public class DeveloperService {
             throw new ResourceExistsException("User with email "+developer.getEmail()+" exists");
         }
         developer.setUsername(request.getUsername());
-        developer.setDni(request.getDni());
         developer.setNames(request.getNames());
         developer.setLastName(request.getLastName());
         developer.setEmail(request.getEmail());
@@ -79,7 +78,7 @@ public class DeveloperService {
             SkillDTO skillDTO = skillService.returnSkillDTO(skill);
             skills.add(skillDTO);
         }
-        return new DeveloperDTO(developer.getUsername(), developer.getNames(), developer.getLastName(), developer.getEmail(), developer.getPortafolio(), developer.getHoursWorked(), developer.getPaymentRate(), developer.getWorkExperience(), developer.getYearsExperience(), postulations, skills);
+        return new DeveloperDTO(developer.getUsername(), developer.getNames(), developer.getLastName(), developer.getEmail(), developer.getPortafolio(), developer.getPaymentRate(), developer.getWorkExperience(), postulations, skills);
     }
 
     // GET

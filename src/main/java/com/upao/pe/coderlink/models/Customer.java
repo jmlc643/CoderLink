@@ -14,15 +14,6 @@ import java.util.List;
 @Entity
 public class Customer extends User{
 
-    @Column(name = "company_name", length = 20, nullable = false)
-    private String companyName;
-
-    @Column(name = "ruc", nullable = false)
-    private int ruc;
-
-    @Column(name = "phone", nullable = false)
-    private int phone;
-
     // Mapear uno a muchos con JobOffer y Project
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     private List<Project> projects;
