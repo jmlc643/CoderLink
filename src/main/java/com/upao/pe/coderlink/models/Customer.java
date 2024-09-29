@@ -14,10 +14,10 @@ import java.util.List;
 @Entity
 public class Customer extends User{
 
-    @Column(name = "company_name", length = 20, unique = true, nullable = false)
+    @Column(name = "company_name", length = 20, nullable = false)
     private String companyName;
 
-    @Column(name = "ruc", unique = true, nullable = false)
+    @Column(name = "ruc", nullable = false)
     private int ruc;
 
     @Column(name = "phone", nullable = false)
