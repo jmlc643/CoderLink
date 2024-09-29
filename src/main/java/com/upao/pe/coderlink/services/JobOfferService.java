@@ -42,7 +42,7 @@ public class JobOfferService {
 
     // DTO
     public JobOfferDTO returnJobOfferDTO(JobOffer jobOffer){
-        PostulationDTO postulationDTO = new PostulationDTO(jobOffer.getPostulation().getDeveloper().getUsername(), jobOffer.getPostulation().getPublicationDate(), jobOffer.getPostulation().getStatus().toString());
+        PostulationDTO postulationDTO = new PostulationDTO(jobOffer.getPostulation().getIdPostulation(), jobOffer.getPostulation().getDeveloper().getUsername(), jobOffer.getPostulation().getPublicationDate(), jobOffer.getPostulation().getStatus().toString());
         return new JobOfferDTO(jobOffer.getMessage(), jobOffer.getBudget(), jobOffer.getDuration(), jobOffer.getPublicationDate(), postulationDTO);
     }
 

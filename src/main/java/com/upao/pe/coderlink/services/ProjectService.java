@@ -64,7 +64,7 @@ public class ProjectService {
             skills.add(skillDTO);
         }
         for(Postulation postulation : project.getPostulations()){
-            PostulationDTO postulationDTO = new PostulationDTO(postulation.getDeveloper().getUsername(), postulation.getPublicationDate(), postulation.getStatus().toString());
+            PostulationDTO postulationDTO = new PostulationDTO(postulation.getIdPostulation(), postulation.getDeveloper().getUsername(), postulation.getPublicationDate(), postulation.getStatus().toString());
             postulations.add(postulationDTO);
         }
         return new ProjectDTO(project.getIdProject(), project.getName(), project.getDescription(), project.getMilestones(), project.getPresentation(), project.getRevision(), project.getStatus().toString(), project.getCategory(), project.getQualification(), project.getCreatedAt(), skills, postulations);

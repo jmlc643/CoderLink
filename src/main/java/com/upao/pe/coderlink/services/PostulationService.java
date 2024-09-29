@@ -39,7 +39,7 @@ public class PostulationService {
 
     // DTO
     public PostulationDTO returnPostulationDTO(Postulation postulation){
-        return new PostulationDTO(postulation.getDeveloper().getUsername(), postulation.getPublicationDate(), postulation.getStatus().toString());
+        return new PostulationDTO(postulation.getIdPostulation(), postulation.getDeveloper().getUsername(), postulation.getPublicationDate(), postulation.getStatus().toString());
     }
 
     // GET

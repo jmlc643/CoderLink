@@ -72,7 +72,7 @@ public class DeveloperService {
         List<PostulationDTO> postulations = new ArrayList<>();
         List<SkillDTO> skills = new ArrayList<>();
         for(Postulation postulation : developer.getPostulations()){
-            PostulationDTO postulationDTO = new PostulationDTO(postulation.getDeveloper().getUsername(), postulation.getPublicationDate(), postulation.getStatus().toString());
+            PostulationDTO postulationDTO = new PostulationDTO(postulation.getIdPostulation(), postulation.getDeveloper().getUsername(), postulation.getPublicationDate(), postulation.getStatus().toString());
             postulations.add(postulationDTO);
         }
         for(Skill skill : developer.getSkills()){
