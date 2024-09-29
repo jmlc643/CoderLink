@@ -45,7 +45,7 @@ public class AuthController {
         return new ResponseEntity<>(authService.recoveryPassword(request), HttpStatus.OK);
     }
 
-    @PatchMapping("/change-password/")
+    @PostMapping("/change-password/")
     public ResponseEntity<ChangePasswordResponse> changePassword(@Valid @RequestBody ChangePasswordRequest request){
         return new ResponseEntity<>(authService.changePassword(request), HttpStatus.OK);
     }

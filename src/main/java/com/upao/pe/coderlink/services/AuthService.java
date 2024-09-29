@@ -128,7 +128,7 @@ public class AuthService {
         String token = tokenService.getTokenByUser(user).getToken();
         String url = "https://coderlink.netlify.app/change-password/"+token;
         String message = "Hola "+user.getUsername()+" vemos que olvidaste tu contraseña y en CoderLink nos gusta la tranquilidad de nuestros usuarios."+
-                "Ingresa a este link para que reestablezcas tu contraseña y puedas seguir disfrutando las funcioens de Learnsync."+
+                "Ingresa a este link para que reestablezcas tu contraseña y puedas seguir disfrutando las funcioens de CoderLink."+
                 "Link: "+url;
         emailService.sendEmail(request.getEmail(), "Reestablecer Contraseña", message);
         return new RecoveryPasswordResponse("Email sended");
