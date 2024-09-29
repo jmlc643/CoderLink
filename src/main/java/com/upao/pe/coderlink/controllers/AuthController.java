@@ -49,4 +49,9 @@ public class AuthController {
     public ResponseEntity<ChangePasswordResponse> changePassword(@Valid @RequestBody ChangePasswordRequest request){
         return new ResponseEntity<>(authService.changePassword(request), HttpStatus.OK);
     }
+
+    @PostMapping("/get-user-token/")
+    public GetUserResponse getUserByToken(@RequestBody String token){
+        return authService.obtainUsernameByToken(token);
+    }
 }

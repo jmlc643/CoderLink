@@ -1,5 +1,6 @@
 package com.upao.pe.coderlink.services;
 
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.upao.pe.coderlink.dtos.customer.CreateCustomerRequest;
 import com.upao.pe.coderlink.dtos.customer.CustomerDTO;
 import com.upao.pe.coderlink.dtos.developer.CreateDeveloperRequest;
@@ -142,5 +143,11 @@ public class AuthService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         userRepository.saveAndFlush(user);
         return new ChangePasswordResponse("Password changed");
+    }
+
+    public GetUserResponse obtainUsernameByToken(String token){
+        DecodedJWT decodedJWT = jwtUtils.validateJWT(token);
+        String username = jwtUtils.extractUsername(decodedJWT);
+        return new GetUserResponse(username);
     }
 }
