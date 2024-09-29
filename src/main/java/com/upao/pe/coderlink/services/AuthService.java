@@ -84,7 +84,7 @@ public class AuthService {
                 "                ACTIVACIÓN DE CUENTA</h3>\n" +
                 "              <p style=\"text-align: center; font-size: 18px; color: #000;\">Se activó la cuenta correctamente.</p>\n" +
                 "              <div style=\"text-align: center; margin-top: 30px;\">\n" +
-                "                <a href=\"#\"\n" + //Poner link del login del front en donde esta el "#"
+                "                <a href=\"https://coderlink.netlify.app/login\"\n" + //Poner link del login del front en donde esta el "#"
                 "                  style=\"display: inline-block; padding: 12px 24px; background-color: #007bff; color: #fff; text-decoration: none; border-radius: 5px; font-size: 18px; font-weight: bold;\">\n" +
                 "                  Iniciar sesión\n" +
                 "                </a>\n" +
@@ -126,7 +126,7 @@ public class AuthService {
         }
         User user = userRepository.findByEmail(request.getEmail());
         String token = tokenService.getTokenByUser(user).getToken();
-        String url = "#/reset-password/"+token;
+        String url = "https://coderlink.netlify.app/change-password/"+token;
         String message = "Hola "+user.getUsername()+" vemos que olvidaste tu contraseña y en CoderLink nos gusta la tranquilidad de nuestros usuarios."+
                 "Ingresa a este link para que reestablezcas tu contraseña y puedas seguir disfrutando las funcioens de Learnsync."+
                 "Link: "+url;
