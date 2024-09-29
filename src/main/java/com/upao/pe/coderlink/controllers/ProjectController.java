@@ -34,8 +34,8 @@ public class ProjectController {
     }
 
     @PostMapping("/search/")
-    public ResponseEntity<List<ProjectDTO>> searchProject(@Valid @RequestBody SearchProjectRequest request) {
-        return new ResponseEntity<>(projectService.getProjectsByName(request.getProjectName()), HttpStatus.FOUND);
+    public List<ProjectDTO> searchProject(@Valid @RequestBody SearchProjectRequest request) {
+        return (projectService.getProjectsByName(request.getProjectName()));
     }
 
     @GetMapping("/get-project/{id}")
