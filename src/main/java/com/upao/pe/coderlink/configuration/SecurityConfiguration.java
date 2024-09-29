@@ -52,7 +52,10 @@ public class SecurityConfiguration {
                     auth.requestMatchers(HttpMethod.PATCH, "/auth/**").permitAll();
                     auth.requestMatchers(HttpMethod.OPTIONS, "/auth/**").permitAll();
                     // Configure the others endpoints
-                    auth.anyRequest().authenticated();
+                    auth.requestMatchers(HttpMethod.GET, "/customer/**").authenticated();
+                    auth.requestMatchers(HttpMethod.POST, "/customer/**").authenticated();
+                    auth.requestMatchers(HttpMethod.PATCH, "/customer/**").authenticated();
+                    auth.requestMatchers(HttpMethod.OPTIONS, "/customer/**").authenticated();
                 })
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(new JwtTokenValidator(jwtUtils), BasicAuthenticationFilter.class)
