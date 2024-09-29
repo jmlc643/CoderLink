@@ -6,5 +6,5 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class GetAuthorities {
-    private String authhorities;
+    private String authorities;
 }
