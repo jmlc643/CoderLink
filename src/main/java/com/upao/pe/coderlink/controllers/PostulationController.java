@@ -25,4 +25,9 @@ public class PostulationController {
     public PostulationDTO createPostulation(@Valid @RequestBody CreatePostulationRequest request){
         return postulationService.createPostulation(request);
     }
+
+    @GetMapping("/get-postulation/{id}")
+    public PostulationDTO getPostulation(@PathVariable Long id){
+        return postulationService.returnPostulationDTO(postulationService.getPostulation(id));
+    }
 }
