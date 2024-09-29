@@ -50,7 +50,7 @@ public class SecurityConfiguration {
                     auth.requestMatchers(HttpMethod.GET, "/auth/**").permitAll();
                     auth.requestMatchers(HttpMethod.POST, "/auth/**").permitAll();
                     auth.requestMatchers(HttpMethod.PATCH, "/auth/**").permitAll();
-
+                    auth.requestMatchers(HttpMethod.OPTIONS, "/auth/**").permitAll();
                     // Configure the others endpoints
                     auth.anyRequest().authenticated();
                 })
