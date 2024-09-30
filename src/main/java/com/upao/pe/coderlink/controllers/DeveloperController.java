@@ -14,4 +14,9 @@ public class DeveloperController {
 
     @GetMapping("/list/")
     public List<DeveloperDTO> listDevelopers(){return developerService.listDevelopers();}
+
+    @GetMapping("/get-developer/{username}")
+    public DeveloperDTO getDeveloper(@PathVariable String username){
+        return developerService.returnDeveloperDTO(developerService.getDeveloper(username));
+    }
 }
