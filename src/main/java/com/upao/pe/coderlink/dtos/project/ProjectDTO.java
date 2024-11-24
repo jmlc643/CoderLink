@@ -18,6 +18,7 @@ public class ProjectDTO {
     private String status;
     private String category;
     private String qualification;
+    private double budget;
     private LocalDateTime createdAt;
     private List<PostulationDTO> postulations;
 }

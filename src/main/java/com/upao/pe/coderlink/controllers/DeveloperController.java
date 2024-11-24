@@ -19,4 +19,14 @@ public class DeveloperController {
     public DeveloperDTO getDeveloper(@PathVariable String username){
         return developerService.returnDeveloperDTO(developerService.getDeveloper(username));
     }
+
+    @PatchMapping("/update-payment-rate/{username}")
+    public DeveloperDTO updatePaymentRate(@PathVariable String username, String paymentRate){
+        return developerService.updatePaymentRate(username, paymentRate);
+    }
+
+    @PostMapping("/filter-developers/")
+    public List<DeveloperDTO> filterDevelopersBySkills(@RequestBody List<String> names){
+        return developerService.filterBySkills(names);
+    }
 }

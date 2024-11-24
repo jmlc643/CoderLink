@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 public class JobOfferDTO {
+    private Long id;
     private double budget;
     private LocalDateTime publicationDate;
     private PostulationDTO postulation;

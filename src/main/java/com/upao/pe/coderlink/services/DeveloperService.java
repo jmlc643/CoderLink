@@ -55,7 +55,7 @@ public class DeveloperService {
         developer.setLastName(request.getLastName());
         developer.setEmail(request.getEmail());
         developer.setPassword(request.getPassword());
-        developer.setTypeUser(TypeUser.valueOf(request.getTypeUser().toUpperCase()));
+        developer.setTypeUser(TypeUser.DEVELOPER);
         return developerRepository.save(developer);
     }
 
@@ -88,5 +88,26 @@ public class DeveloperService {
             throw new ResourceNotExistsException("Developer "+username+" has not been founded");
         }
         return developer.get();
+    }
+
+    // UPDATE PAYMENT RATE
+    public DeveloperDTO updatePaymentRate(String username, String paymentRate){
+        Developer developer = getDeveloper(username);
+        developer.setPaymentRate(paymentRate);
+        return returnDeveloperDTO(developerRepository.saveAndFlush(developer));
+    }
+
+    public List<DeveloperDTO> filterBySkills(List<String> names) {
+        List<Skill> skills = skillService.getSkills(names);
+
+        if (skills == null || skills.isEmpty()) {
+            return List.of();
+        }
+
+        List<Developer> results = developerRepository.findAll().stream()
+                .filter(dev -> dev.getSkills().stream().anyMatch(skills::contains))
+                .toList();
+
+        return results.stream().map(this::returnDeveloperDTO).toList();
     }
 }

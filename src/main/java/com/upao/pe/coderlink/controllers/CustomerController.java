@@ -20,4 +20,14 @@ public class CustomerController {
     public CustomerDTO getCustomer(@PathVariable String username){
         return customerService.returnCustomerDTO(customerService.getCustomer(username));
     }
+
+    @PostMapping("/add-favorite/{customUser}/{devUser}")
+    public CustomerDTO addFavorite(@PathVariable String customUser, @PathVariable String devUser){
+        return customerService.addFavorite(customUser, devUser);
+    }
+
+    @DeleteMapping("/delete-favorite/{customUser}/{devUser}")
+    public CustomerDTO deleteFavorite(@PathVariable String customUser, @PathVariable String devUser){
+        return customerService.deleteFavorite(customUser, devUser);
+    }
 }

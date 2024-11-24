@@ -28,7 +28,7 @@ public class ProjectService {
     // CREATE
     public ProjectDTO createProject(CreateProjectRequest request){
         Customer customer = customerService.getCustomer(request.getUsername());
-        Project project = new Project(null, request.getName(), request.getDescription(), request.getPresentation(), request.getRevision(), ProjectStatus.TODO, request.getCategory(), request.getQualification(), LocalDateTime.now(), null, customer, new ArrayList<>());
+        Project project = new Project(null, request.getName(), request.getDescription(), request.getPresentation(), request.getRevision(), ProjectStatus.TODO, request.getCategory(), request.getQualification(), LocalDateTime.now(), null, request.getBudget(), customer, new ArrayList<>());
         return returnProjectDTO(projectRepository.save(project));
     }
 
@@ -50,7 +50,7 @@ public class ProjectService {
             PostulationDTO postulationDTO = new PostulationDTO(postulation.getIdPostulation(), postulation.getDeveloper().getUsername(), postulation.getPublicationDate(), postulation.getStatus().toString());
             postulations.add(postulationDTO);
         }
-        return new ProjectDTO(project.getIdProject(), project.getName(), project.getDescription(), project.getPresentation(), project.getRevision(), project.getStatus().toString(), project.getCategory(), project.getQualification(), project.getCreatedAt(), postulations);
+        return new ProjectDTO(project.getIdProject(), project.getName(), project.getDescription(), project.getPresentation(), project.getRevision(), project.getStatus().toString(), project.getCategory(), project.getQualification(), project.getBudget(), project.getCreatedAt(), postulations);
     }
 
     // Search

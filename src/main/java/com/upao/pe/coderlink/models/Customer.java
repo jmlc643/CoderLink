@@ -20,4 +20,9 @@ public class Customer extends User{
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     private List<JobOffer> offers;
+
+    //Mapear muchos a muchos con Developer
+    @ManyToMany(fetch = FetchType.EAGER, targetEntity = Developer.class, cascade = CascadeType.PERSIST)
+    @JoinTable(name = "favorites", joinColumns = @JoinColumn(name = "id_customer"), inverseJoinColumns = @JoinColumn(name = "id_developer"))
+    private List<Developer> developers;
 }

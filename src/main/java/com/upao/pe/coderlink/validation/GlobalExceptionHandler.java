@@ -11,8 +11,4 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handlerArgumentsException(IllegalArgumentException exception){
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_REQUEST);
     }
-
-    public ResponseEntity<String> handlerRunTimeException(RuntimeException exception){
-        return new ResponseEntity<>(exception.getMessage(), HttpStatus.BAD_GATEWAY);
-    }
 }

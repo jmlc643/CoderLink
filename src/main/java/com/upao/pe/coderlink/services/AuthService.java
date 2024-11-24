@@ -1,6 +1,5 @@
 package com.upao.pe.coderlink.services;
 
-import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.upao.pe.coderlink.dtos.customer.CreateCustomerRequest;
 import com.upao.pe.coderlink.dtos.customer.CustomerDTO;
@@ -8,7 +7,6 @@ import com.upao.pe.coderlink.dtos.developer.CreateDeveloperRequest;
 import com.upao.pe.coderlink.dtos.developer.DeveloperDTO;
 import com.upao.pe.coderlink.dtos.user.*;
 import com.upao.pe.coderlink.exceptions.ExpiredTokenException;
-import com.upao.pe.coderlink.exceptions.ResourceNotExistsException;
 import com.upao.pe.coderlink.exceptions.UsedEmailException;
 import com.upao.pe.coderlink.models.Customer;
 import com.upao.pe.coderlink.models.Developer;
@@ -17,7 +15,8 @@ import com.upao.pe.coderlink.models.User;
 import com.upao.pe.coderlink.repos.UserRepository;
 import com.upao.pe.coderlink.util.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -26,7 +25,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Service
 public class AuthService {
@@ -41,9 +39,6 @@ public class AuthService {
 
     public CustomerDTO registerCustomer(CreateCustomerRequest request){
         request.setPassword(passwordEncoder.encode(request.getPassword()));
-        if(!request.getTypeUser().equalsIgnoreCase("CUSTOMER")){
-            throw new ResourceNotExistsException("Wrong Role");
-        }
         Customer customer = customerService.createCustomer(request);
         tokenService.sendEmail(customer);
         return customerService.returnCustomerDTO(customer);
@@ -51,9 +46,6 @@ public class AuthService {
 
     public DeveloperDTO registerDeveloper(CreateDeveloperRequest request){
         request.setPassword(passwordEncoder.encode(request.getPassword()));
-        if(!request.getTypeUser().equalsIgnoreCase("DEVELOPER")){
-            throw new ResourceNotExistsException("Wrong Role");
-        }
         Developer developer = developerService.createDeveloper(request);
         tokenService.sendEmail(developer);
         return developerService.returnDeveloperDTO(developer);
@@ -99,32 +91,41 @@ public class AuthService {
                 "  </table>";
     }
 
-    public AuthResponse login(AuthenticationUserRequest request){
-        Authentication authentication = authenticate(request.getUsername(), request.getPassword());
+    public ResponseEntity<?> login(AuthenticationUserRequest request){
+        ResponseEntity<?> authenticationResponse = authenticate(request.getUsername(), request.getPassword());
+
+        if (authenticationResponse.getStatusCode() != HttpStatus.OK) {
+            return authenticationResponse;
+        }
+        Authentication authentication = (Authentication) authenticationResponse.getBody();
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         String accessToken = jwtUtils.generateToken(authentication);
 
-        return new AuthResponse(request.getUsername(), "Authentication successfuly", accessToken, true);
+        DecodedJWT decodedJWT = jwtUtils.validateJWT(accessToken);
+
+        String role = jwtUtils.extractSpecificClaim(decodedJWT, "authorities").asString();
+
+        return new ResponseEntity<>(new AuthResponse(request.getUsername(), "Authentication successfuly", accessToken, true, role), HttpStatus.OK);
     }
 
-    public Authentication authenticate(String username, String password){
+    public ResponseEntity<?> authenticate(String username, String password){
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
         if(userDetails == null){
-            throw new BadCredentialsException("Invalid Username or Password");
+            return new ResponseEntity<>("Invalid Username or Password", HttpStatus.NOT_FOUND);
         }
 
         if(!passwordEncoder.matches(password, userDetails.getPassword())){
-            throw new BadCredentialsException("Invalid Password");
+            return new ResponseEntity<>("Invalid Password", HttpStatus.NOT_FOUND);
         }
 
-        return new UsernamePasswordAuthenticationToken(username, userDetails.getPassword(), userDetails.getAuthorities());
+        return new ResponseEntity<>(new UsernamePasswordAuthenticationToken(username, userDetails.getPassword(), userDetails.getAuthorities()), HttpStatus.OK);
     }
 
-    public RecoveryPasswordResponse recoveryPassword(RecoveryPasswordRequest request) {
+    public ResponseEntity<?> recoveryPassword(RecoveryPasswordRequest request) {
         if(!userRepository.existsUserByEmail(request.getEmail())){
-            throw new ResourceNotExistsException("No user was found linked to this email");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Participante no encontrado.");
         }
         User user = userRepository.findByEmail(request.getEmail());
         String token = tokenService.getTokenByUser(user).getToken();
@@ -133,29 +134,16 @@ public class AuthService {
                 "Ingresa a este link para que reestablezcas tu contraseña y puedas seguir disfrutando las funcioens de CoderLink."+
                 "Link: "+url;
         emailService.sendEmail(request.getEmail(), "Reestablecer Contraseña", message);
-        return new RecoveryPasswordResponse("Email sended");
+        return ResponseEntity.status(HttpStatus.OK).body(new RecoveryPasswordResponse("Email sended"));
     }
 
-    public ChangePasswordResponse changePassword(ChangePasswordRequest request){
+    public ResponseEntity<?> changePassword(ChangePasswordRequest request){
         if(!request.getPassword().equalsIgnoreCase(request.getConfirmationPassword())){
-            throw new RuntimeException("Different Password");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Different Password");
         }
         User user = tokenService.getToken(request.getToken()).getUser();
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         userRepository.saveAndFlush(user);
-        return new ChangePasswordResponse("Password changed");
-    }
-
-    public GetUserResponse obtainUsernameByToken(String token){
-        DecodedJWT decodedJWT = jwtUtils.validateJWT(token);
-        String username = jwtUtils.extractUsername(decodedJWT);
-        return new GetUserResponse(username);
-    }
-
-    public GetAuthorities obtainAuthoritiesByToken(String token){
-        DecodedJWT decodedJWT = jwtUtils.validateJWT(token);
-        Claim claim = jwtUtils.extractSpecificClaim(decodedJWT, "authorities");
-        return new GetAuthorities(claim.asString());
-
+        return ResponseEntity.status(HttpStatus.OK).body(new ChangePasswordResponse("Password changed"));
     }
 }

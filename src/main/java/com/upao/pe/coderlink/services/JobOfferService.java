@@ -1,6 +1,7 @@
 package com.upao.pe.coderlink.services;
 
 import com.upao.pe.coderlink.dtos.offer.CreateJobOfferRequest;
+import com.upao.pe.coderlink.dtos.offer.EditJobOfferRequest;
 import com.upao.pe.coderlink.dtos.offer.JobOfferDTO;
 import com.upao.pe.coderlink.dtos.postulation.PostulationDTO;
 import com.upao.pe.coderlink.exceptions.ResourceNotExistsException;
@@ -40,10 +41,24 @@ public class JobOfferService {
         return jobOfferRepository.findAll().stream().map(this::returnJobOfferDTO).toList();
     }
 
+    // UPDATE
+    public JobOfferDTO editJobOffer(EditJobOfferRequest request){
+        JobOffer jobOffer = getJobOffer(request.getId());
+        jobOffer.setBudget(jobOffer.getBudget());
+        jobOfferRepository.saveAndFlush(jobOffer);
+        return returnJobOfferDTO(jobOffer);
+    }
+
+    // DELETE
+    public List<JobOfferDTO> deleteJobOffer(Long id){
+        jobOfferRepository.deleteById(id);
+        return listJobOffers();
+    }
+
     // DTO
     public JobOfferDTO returnJobOfferDTO(JobOffer jobOffer){
         PostulationDTO postulationDTO = new PostulationDTO(jobOffer.getPostulation().getIdPostulation(), jobOffer.getPostulation().getDeveloper().getUsername(), jobOffer.getPostulation().getPublicationDate(), jobOffer.getPostulation().getStatus().toString());
-        return new JobOfferDTO(jobOffer.getBudget(), jobOffer.getPublicationDate(), postulationDTO);
+        return new JobOfferDTO(jobOffer.getIdOffer(), jobOffer.getBudget(), jobOffer.getPublicationDate(), postulationDTO);
     }
 
     public JobOffer getJobOffer(Long id){

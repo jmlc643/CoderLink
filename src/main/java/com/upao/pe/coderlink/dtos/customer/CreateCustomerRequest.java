@@ -23,7 +23,4 @@ public class CreateCustomerRequest {
     @NotBlank(message = "A data with only blank spaces is not valid")
     @Size(min = 8, message = "Password must be at least 8 characters long")
     private String password;
-    @NotEmpty(message = "Empty Data")
-    @NotBlank(message = "A data with only blank spaces is not valid")
-    private String typeUser;
 }

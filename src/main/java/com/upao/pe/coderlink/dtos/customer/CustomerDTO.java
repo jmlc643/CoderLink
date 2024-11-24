@@ -1,5 +1,6 @@
 package com.upao.pe.coderlink.dtos.customer;
 
+import com.upao.pe.coderlink.dtos.developer.DeveloperDTO;
 import com.upao.pe.coderlink.dtos.offer.JobOfferDTO;
 import com.upao.pe.coderlink.dtos.project.ProjectDTO;
 import lombok.AllArgsConstructor;
@@ -16,4 +17,5 @@ public class CustomerDTO {
     private String email;
     private List<ProjectDTO> projects;
     private List<JobOfferDTO> offers;
+    private List<DeveloperDTO> favoritesDevs;
 }

@@ -36,27 +36,17 @@ public class AuthController {
     }
 
     @PostMapping("/login/")
-    public ResponseEntity<AuthResponse> login(@Valid @RequestBody AuthenticationUserRequest request){
-        return new ResponseEntity<>(authService.login(request), HttpStatus.OK);
+    public ResponseEntity<?> login(@Valid @RequestBody AuthenticationUserRequest request){
+        return authService.login(request);
     }
 
     @PostMapping("/recovery-password/")
-    public ResponseEntity<RecoveryPasswordResponse> recoverPassword(@Valid @RequestBody RecoveryPasswordRequest request){
-        return new ResponseEntity<>(authService.recoveryPassword(request), HttpStatus.OK);
+    public ResponseEntity<?> recoverPassword(@Valid @RequestBody RecoveryPasswordRequest request){
+        return authService.recoveryPassword(request);
     }
 
     @PostMapping("/change-password/")
-    public ResponseEntity<ChangePasswordResponse> changePassword(@Valid @RequestBody ChangePasswordRequest request){
-        return new ResponseEntity<>(authService.changePassword(request), HttpStatus.OK);
-    }
-
-    @PostMapping("/get-user-token/")
-    public GetUserResponse getUserByToken(@RequestBody String token){
-        return authService.obtainUsernameByToken(token);
-    }
-
-    @PostMapping("/get-authorities-token/")
-    public GetAuthorities getAuthoritiesByToken(@RequestBody String token){
-        return authService.obtainAuthoritiesByToken(token);
+    public ResponseEntity<?> changePassword(@Valid @RequestBody ChangePasswordRequest request){
+        return authService.changePassword(request);
     }
 }

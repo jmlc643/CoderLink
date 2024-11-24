@@ -49,6 +49,9 @@ public class Project {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @Column(name = "budget", nullable = false)
+    private double budget;
+
     // Mapear el muchos a uno con Customer
     @ManyToOne
     @JoinColumn(name = "id_customer", nullable = false)
