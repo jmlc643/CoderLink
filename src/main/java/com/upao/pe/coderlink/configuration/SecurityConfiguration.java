@@ -51,8 +51,12 @@ public class SecurityConfiguration {
                     auth.requestMatchers(HttpMethod.POST, "/auth/**").permitAll();
                     auth.requestMatchers(HttpMethod.PATCH, "/auth/**").permitAll();
                     auth.requestMatchers(HttpMethod.OPTIONS, "/auth/**").permitAll();
+                    auth.requestMatchers(HttpMethod.POST, "/customer/send-code/").permitAll();
+                    auth.requestMatchers(HttpMethod.OPTIONS, "/customer/send-code/").permitAll();
+                    auth.requestMatchers(HttpMethod.POST, "/customer/verify-code/").permitAll();
+                    auth.requestMatchers(HttpMethod.OPTIONS, "/customer/verify-code/").permitAll();
                     // Configure the others endpoints
-                    auth.anyRequest().permitAll();
+                    auth.anyRequest().authenticated();
                 })
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(new JwtTokenValidator(jwtUtils), BasicAuthenticationFilter.class)

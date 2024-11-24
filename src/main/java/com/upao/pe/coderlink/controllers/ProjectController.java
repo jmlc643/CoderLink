@@ -3,6 +3,7 @@ package com.upao.pe.coderlink.controllers;
 import com.upao.pe.coderlink.dtos.project.CreateProjectRequest;
 import com.upao.pe.coderlink.dtos.project.ProjectDTO;
 import com.upao.pe.coderlink.dtos.project.SearchProjectRequest;
+import com.upao.pe.coderlink.dtos.project.SetStatusRequest;
 import com.upao.pe.coderlink.services.ProjectService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,5 +42,10 @@ public class ProjectController {
     @GetMapping("/get-project/{id}")
     public ProjectDTO getProject(@PathVariable Long id){
         return projectService.returnProjectDTO(projectService.getProjectById(id));
+    }
+
+    @PostMapping("/set-status/")
+    public ProjectDTO setStatusProject(@RequestBody SetStatusRequest request){
+        return projectService.setStatusProject(request);
     }
 }

@@ -14,13 +14,13 @@ import java.util.List;
 @Entity
 public class Developer extends User{
 
-    @Column(name = "portafolio", length = 30, nullable = false)
+    @Column(name = "portafolio", nullable = false)
     private String portafolio;
 
-    @Column(name = "payment_rate", length = 30, nullable = false)
-    private String paymentRate;
+    @Column(name = "payment_rate", nullable = false)
+    private double paymentRate;
 
-    @Column(name = "work_experience", length = 40, nullable = false)
+    @Column(name = "work_experience", length = 150, nullable = false)
     private String workExperience;
 
     // Mapear el uno a muchos con Postulation

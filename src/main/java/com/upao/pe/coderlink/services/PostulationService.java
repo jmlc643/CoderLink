@@ -28,7 +28,7 @@ public class PostulationService {
     public PostulationDTO createPostulation(CreatePostulationRequest request){
         Developer developer = developerService.getDeveloper(request.getDevName());
         Project project = projectService.getProjectById(request.getIdProject());
-        Postulation postulation = new Postulation(null, LocalDateTime.now(), PostulationStatus.SENDED, developer, project);
+        Postulation postulation = new Postulation(null, LocalDateTime.now(), PostulationStatus.SENDED, developer, project, null);
         return returnPostulationDTO(postulationRepository.save(postulation));
     }
 

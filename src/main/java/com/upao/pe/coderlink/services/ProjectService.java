@@ -3,6 +3,7 @@ package com.upao.pe.coderlink.services;
 import com.upao.pe.coderlink.dtos.postulation.PostulationDTO;
 import com.upao.pe.coderlink.dtos.project.CreateProjectRequest;
 import com.upao.pe.coderlink.dtos.project.ProjectDTO;
+import com.upao.pe.coderlink.dtos.project.SetStatusRequest;
 import com.upao.pe.coderlink.dtos.skill.SkillDTO;
 import com.upao.pe.coderlink.exceptions.ResourceNotExistsException;
 import com.upao.pe.coderlink.models.Customer;
@@ -44,13 +45,12 @@ public class ProjectService {
 
     // DTO
     public ProjectDTO returnProjectDTO(Project project) {
-        List<SkillDTO> skills = new ArrayList<>();
         List<PostulationDTO> postulations = new ArrayList<>();
         for(Postulation postulation : project.getPostulations()){
             PostulationDTO postulationDTO = new PostulationDTO(postulation.getIdPostulation(), postulation.getDeveloper().getUsername(), postulation.getPublicationDate(), postulation.getStatus().toString());
             postulations.add(postulationDTO);
         }
-        return new ProjectDTO(project.getIdProject(), project.getName(), project.getDescription(), project.getPresentation(), project.getRevision(), project.getStatus().toString(), project.getCategory(), project.getQualification(), project.getBudget(), project.getCreatedAt(), postulations);
+        return new ProjectDTO(project.getIdProject(), project.getName(), project.getDescription(), project.getPresentation(), project.getRevision(), project.getStatus().toString(), project.getCategory(), project.getQualification(), project.getBudget(), project.getCreatedAt(), project.getUpdatedAt(), postulations);
     }
 
     // Search
@@ -78,4 +78,11 @@ public class ProjectService {
         projectRepository.saveAndFlush(project);
     }
 
+    public ProjectDTO setStatusProject(SetStatusRequest request) {
+        Project project = getProjectById(request.getId());
+        project.setStatus(ProjectStatus.valueOf(request.getStatus().toUpperCase()));
+        project.setUpdatedAt(LocalDateTime.now());
+        projectRepository.saveAndFlush(project);
+        return returnProjectDTO(project);
+    }
 }

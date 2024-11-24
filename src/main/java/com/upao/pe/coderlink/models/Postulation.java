@@ -35,4 +35,7 @@ public class Postulation {
     @ManyToOne
     @JoinColumn(name = "id_project", nullable = false)
     private Project project;
+
+    @OneToOne(mappedBy = "postulation", cascade = CascadeType.ALL, orphanRemoval = true)
+    private JobOffer jobOffer;
 }

@@ -28,9 +28,8 @@ public class CreateDeveloperRequest {
     @NotEmpty(message = "Empty Data")
     @NotBlank(message = "A data with only blank spaces is not valid")
     private String portfolio;
-    @NotEmpty(message = "Empty Data")
-    @NotBlank(message = "A data with only blank spaces is not valid")
-    private String paymentRate;
+    @NotNull(message = "Null Data")
+    private double paymentRate;
     @NotEmpty(message = "Empty Data")
     @NotBlank(message = "A data with only blank spaces is not valid")
     private String workExperience;

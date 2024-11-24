@@ -1,7 +1,6 @@
 package com.upao.pe.coderlink.services;
 
-import com.upao.pe.coderlink.dtos.customer.CreateCustomerRequest;
-import com.upao.pe.coderlink.dtos.customer.CustomerDTO;
+import com.upao.pe.coderlink.dtos.customer.*;
 import com.upao.pe.coderlink.dtos.developer.DeveloperDTO;
 import com.upao.pe.coderlink.dtos.offer.JobOfferDTO;
 import com.upao.pe.coderlink.dtos.postulation.PostulationDTO;
@@ -13,11 +12,11 @@ import com.upao.pe.coderlink.models.enums.TypeUser;
 import com.upao.pe.coderlink.repos.CustomerRepository;
 import com.upao.pe.coderlink.repos.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class CustomerService {
@@ -28,6 +27,13 @@ public class CustomerService {
     private UserRepository userRepository;
 
     @Autowired DeveloperService developerService;
+
+    private final Map<String, String> verificationCodes = new ConcurrentHashMap<>(); // Simula almacenamiento en memoria
+    @Autowired
+    private EmailService emailService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     // CREATE
     public Customer createCustomer(CreateCustomerRequest request){
@@ -52,6 +58,14 @@ public class CustomerService {
     public List<CustomerDTO> listCustomer(){return customerRepository.findAll().stream().map(this::returnCustomerDTO).toList();}
 
     // UPDATE
+    public CustomerDTO updateCustomer(UpdateCustomerRequest request, String username) {
+        Customer customer = getCustomer(username);
+        customer.setUsername(request.getUsername());
+        customer.setPassword(passwordEncoder.encode(request.getPassword()));
+        customer.setEmail(request.getEmail());
+        customerRepository.saveAndFlush(customer);
+        return returnCustomerDTO(customer);
+    }
 
     // DELETE
 
@@ -66,7 +80,7 @@ public class CustomerService {
                 PostulationDTO postulationDTO = new PostulationDTO(postulation.getIdPostulation(), postulation.getDeveloper().getUsername(), postulation.getPublicationDate(), postulation.getStatus().toString());
                 postulations.add(postulationDTO);
             }
-            ProjectDTO projectDTO = new ProjectDTO(project.getIdProject(), project.getName(), project.getDescription(), project.getPresentation(), project.getRevision(), project.getStatus().toString(), project.getCategory(), project.getQualification(), project.getBudget(), project.getCreatedAt(), postulations);
+            ProjectDTO projectDTO = new ProjectDTO(project.getIdProject(), project.getName(), project.getDescription(), project.getPresentation(), project.getRevision(), project.getStatus().toString(), project.getCategory(), project.getQualification(), project.getBudget(), project.getCreatedAt(), project.getUpdatedAt(), postulations);
             projects.add(projectDTO);
         }
         for(JobOffer offer : customer.getOffers()){
@@ -75,7 +89,8 @@ public class CustomerService {
             offers.add(jobOfferDTO);
         }
         for(Developer developer: customer.getDevelopers()){
-            developerService.returnDeveloperDTO(developer);
+            DeveloperDTO developerDTO = developerService.returnDeveloperDTO(developer);
+            developers.add(developerDTO);
         }
         return new CustomerDTO(customer.getUsername(), customer.getNames(), customer.getLastName(), customer.getEmail(), projects, offers, developers);
     }
@@ -101,5 +116,26 @@ public class CustomerService {
         customer.getDevelopers().remove((developerService.getDeveloper(devUser)));
         customerRepository.saveAndFlush(customer);
         return returnCustomerDTO(customer);
+    }
+
+    public void sendVerificationCode(EmailRequest request) {
+        // Generar un código de verificación
+        String code = String.valueOf((int) (Math.random() * 10000)); // Código de 4 dígitos
+        verificationCodes.put(request.getEmail(), code);
+
+        // Enviar correo electrónico (simulado)
+        System.out.println("Enviando código " + code + " al correo " + request.getEmail());
+        emailService.sendEmail(request.getEmail(), "Código de Verificación", "Atención su código para continuar con el cambio de su perfil es: "+ code);
+    }
+
+    public void verifyCode(VerificationRequest request) {
+        String storedCode = verificationCodes.get(request.getEmail());
+
+        if (storedCode == null || !storedCode.equals(request.getCode())) {
+            throw new IllegalArgumentException("Código de verificación inválido o expirado");
+        }
+
+        // Código válido: elimina el código usado
+        verificationCodes.remove(request.getEmail());
     }
 }

@@ -1,5 +1,6 @@
 package com.upao.pe.coderlink.dtos.project;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.upao.pe.coderlink.dtos.postulation.PostulationDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,6 +20,9 @@ public class ProjectDTO {
     private String category;
     private String qualification;
     private double budget;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime createdAt;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private LocalDateTime updateAt;
     private List<PostulationDTO> postulations;
 }

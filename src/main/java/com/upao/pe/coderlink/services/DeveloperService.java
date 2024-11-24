@@ -1,7 +1,10 @@
 package com.upao.pe.coderlink.services;
 
+import com.upao.pe.coderlink.dtos.customer.EmailRequest;
+import com.upao.pe.coderlink.dtos.customer.VerificationRequest;
 import com.upao.pe.coderlink.dtos.developer.CreateDeveloperRequest;
 import com.upao.pe.coderlink.dtos.developer.DeveloperDTO;
+import com.upao.pe.coderlink.dtos.developer.UpdateDeveloperRequest;
 import com.upao.pe.coderlink.dtos.postulation.PostulationDTO;
 import com.upao.pe.coderlink.dtos.skill.CreateSkillRequest;
 import com.upao.pe.coderlink.dtos.skill.SkillDTO;
@@ -14,11 +17,14 @@ import com.upao.pe.coderlink.models.enums.TypeUser;
 import com.upao.pe.coderlink.repos.DeveloperRepository;
 import com.upao.pe.coderlink.repos.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class DeveloperService {
@@ -26,10 +32,16 @@ public class DeveloperService {
     @Autowired
     private DeveloperRepository developerRepository;
 
+    private final Map<String, String> verificationCodes = new ConcurrentHashMap<>();
+
     @Autowired
     private UserRepository userRepository;
 
     @Autowired private SkillService skillService;
+
+    @Autowired private EmailService emailService;
+
+    @Autowired private PasswordEncoder passwordEncoder;
 
     // CREATE
     public Developer createDeveloper(CreateDeveloperRequest request){
@@ -63,6 +75,16 @@ public class DeveloperService {
     public List<DeveloperDTO> listDevelopers(){return developerRepository.findAll().stream().map(this::returnDeveloperDTO).toList();}
 
     // UPDATE
+    public DeveloperDTO updateDeveloper(UpdateDeveloperRequest request, String username){
+        Developer developer = getDeveloper(username);
+        developer.setUsername(request.getUsername());
+        developer.setPortafolio(request.getPortfolio());
+        developer.setPaymentRate(request.getPaymentRate());
+        developer.setEmail(request.getEmail());
+        developer.setPassword(passwordEncoder.encode(request.getPassword()));
+        developerRepository.saveAndFlush(developer);
+        return returnDeveloperDTO(developerRepository.saveAndFlush(developer));
+    }
 
     // DELETE
 
@@ -90,13 +112,6 @@ public class DeveloperService {
         return developer.get();
     }
 
-    // UPDATE PAYMENT RATE
-    public DeveloperDTO updatePaymentRate(String username, String paymentRate){
-        Developer developer = getDeveloper(username);
-        developer.setPaymentRate(paymentRate);
-        return returnDeveloperDTO(developerRepository.saveAndFlush(developer));
-    }
-
     public List<DeveloperDTO> filterBySkills(List<String> names) {
         List<Skill> skills = skillService.getSkills(names);
 
@@ -109,5 +124,25 @@ public class DeveloperService {
                 .toList();
 
         return results.stream().map(this::returnDeveloperDTO).toList();
+    }
+    public void sendVerificationCode(EmailRequest request) {
+        // Generar un código de verificación
+        String code = String.valueOf((int) (Math.random() * 10000)); // Código de 4 dígitos
+        verificationCodes.put(request.getEmail(), code);
+
+        // Enviar correo electrónico (simulado)
+        System.out.println("Enviando código " + code + " al correo " + request.getEmail());
+        emailService.sendEmail(request.getEmail(), "Código de Verificación", "Atención su código para continuar con el cambio de su perfil es: "+ code);
+    }
+
+    public void verifyCode(VerificationRequest request) {
+        String storedCode = verificationCodes.get(request.getEmail());
+
+        if (storedCode == null || !storedCode.equals(request.getCode())) {
+            throw new IllegalArgumentException("Código de verificación inválido o expirado");
+        }
+
+        // Código válido: elimina el código usado
+        verificationCodes.remove(request.getEmail());
     }
 }

@@ -1,8 +1,13 @@
 package com.upao.pe.coderlink.controllers;
 
 import com.upao.pe.coderlink.dtos.customer.CustomerDTO;
+import com.upao.pe.coderlink.dtos.customer.EmailRequest;
+import com.upao.pe.coderlink.dtos.customer.UpdateCustomerRequest;
+import com.upao.pe.coderlink.dtos.customer.VerificationRequest;
+import com.upao.pe.coderlink.dtos.user.AuthResponse;
 import com.upao.pe.coderlink.services.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,7 +26,7 @@ public class CustomerController {
         return customerService.returnCustomerDTO(customerService.getCustomer(username));
     }
 
-    @PostMapping("/add-favorite/{customUser}/{devUser}")
+    @GetMapping("/add-favorite/{customUser}/{devUser}")
     public CustomerDTO addFavorite(@PathVariable String customUser, @PathVariable String devUser){
         return customerService.addFavorite(customUser, devUser);
     }
@@ -29,5 +34,22 @@ public class CustomerController {
     @DeleteMapping("/delete-favorite/{customUser}/{devUser}")
     public CustomerDTO deleteFavorite(@PathVariable String customUser, @PathVariable String devUser){
         return customerService.deleteFavorite(customUser, devUser);
+    }
+
+    @PutMapping("/edit-customer/{username}")
+    public CustomerDTO updateCustomer(@RequestBody UpdateCustomerRequest request, @PathVariable String username){
+        return customerService.updateCustomer(request, username);
+    }
+
+    @PostMapping("/send-code/")
+    public ResponseEntity<Void> sendVerificationCode(@RequestBody EmailRequest request) {
+        customerService.sendVerificationCode(request);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/verify-code/")
+    public ResponseEntity<Void> verifyEmailCode(@RequestBody VerificationRequest request) {
+        customerService.verifyCode(request);
+        return ResponseEntity.ok().build();
     }
 }
