@@ -53,7 +53,7 @@ public class PayPalService {
                         .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                         .header(HttpHeaders.AUTHORIZATION, "Basic " + Base64.getEncoder()
                                 .encodeToString((clientId + ":" + clientSecret).getBytes()))
-                        .header(HttpHeaders.USER_AGENT, "XXXXXXXXXXXXXXXX")
+                        .header(HttpHeaders.USER_AGENT, "XXXXXXXXX")
                         .body(body)
                         .retrieve()
                         .toEntity(TokenResponse.class)
