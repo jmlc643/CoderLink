@@ -32,7 +32,7 @@ public class JobOfferService {
         Postulation postulation = postulationService.getPostulation(request.getPostulationId());
         postulation.setStatus(PostulationStatus.OFFER);
         postulationService.saveChanges(postulation);
-        JobOffer jobOffer = new JobOffer(null, request.getBudget(), LocalDateTime.now(), customer, postulation);
+        JobOffer jobOffer = new JobOffer(null, request.getBudget(), LocalDateTime.now(), customer, postulation, null);
         return returnJobOfferDTO(jobOfferRepository.save(jobOffer));
     }
 

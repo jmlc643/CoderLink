@@ -4,6 +4,7 @@ import com.upao.pe.coderlink.dtos.offer.JobOfferDTO;
 import com.upao.pe.coderlink.dtos.payment.CreatePaymentRequest;
 import com.upao.pe.coderlink.dtos.payment.PaymentDTO;
 import com.upao.pe.coderlink.exceptions.ResourceNotExistsException;
+import com.upao.pe.coderlink.exceptions.ResourceNotFoundException;
 import com.upao.pe.coderlink.models.JobOffer;
 import com.upao.pe.coderlink.models.Payment;
 import com.upao.pe.coderlink.models.Postulation;
@@ -14,8 +15,10 @@ import com.upao.pe.coderlink.models.enums.ProjectStatus;
 import com.upao.pe.coderlink.repos.PaymentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -48,7 +51,7 @@ public class PaymentService {
 
     public PaymentDTO returnPaymentDTO(Payment payment){
         JobOfferDTO jobOfferDTO = jobOfferService.returnJobOfferDTO(payment.getJobOffer());
-        return new PaymentDTO(payment.getTransactionDate(), payment.getTotal(), payment.getTotalDate(), payment.getPaymentMethod(), payment.getFacturation(), payment.getStatus().toString(), jobOfferDTO);
+        return new PaymentDTO(payment.getIdPayment(), payment.getTransactionDate(), payment.getTotal(), payment.getTotalDate(), payment.getPaymentMethod(), payment.getFacturation(), payment.getStatus().toString(), jobOfferDTO);
     }
 
     public Payment getPayment(Long id){
@@ -57,5 +60,29 @@ public class PaymentService {
             throw new ResourceNotExistsException("This payment does not exists");
         }
         return payment.get();
+    }
+
+    @Transactional
+    public PaymentDTO confirmPurchase(Long paymentId) {
+        // Obtener la entidad Purchase directamente desde el repositorio
+        Payment payment = paymentRepository.findById(paymentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Purchase not found"));
+
+        // Confirmar la compra y calcular el total
+       /* Float total = purchase.getItems()
+                .stream()
+                .map(item -> item.getPrice() * item.getQuantity())
+                .reduce(0f, Float::sum);
+
+        purchase.setTotal(total);*/
+        payment.setStatus(PaymentStatus.PAID);
+
+        // Guardar y retornar el DTO actualizado
+        Payment updatedPurchase = paymentRepository.save(payment);
+        return returnPaymentDTO(updatedPurchase);
+    }
+
+    public List<PaymentDTO> listPayments() {
+        return paymentRepository.findAll().stream().map(this::returnPaymentDTO).toList();
     }
 }
