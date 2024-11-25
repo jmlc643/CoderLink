@@ -34,4 +34,7 @@ public class JobOffer {
     @OneToOne
     @JoinColumn(name = "id_postulation", nullable = false)
     private Postulation postulation;
+
+    @OneToOne(mappedBy = "jobOffer", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Payment payment;
 }

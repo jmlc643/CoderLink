@@ -1,12 +1,10 @@
 package com.upao.pe.coderlink.services;
 
 import com.upao.pe.coderlink.dtos.postulation.PostulationDTO;
-import com.upao.pe.coderlink.dtos.project.CreateProjectRequest;
-import com.upao.pe.coderlink.dtos.project.ProjectDTO;
-import com.upao.pe.coderlink.dtos.project.SetStatusRequest;
-import com.upao.pe.coderlink.dtos.skill.SkillDTO;
+import com.upao.pe.coderlink.dtos.project.*;
 import com.upao.pe.coderlink.exceptions.ResourceNotExistsException;
 import com.upao.pe.coderlink.models.Customer;
+import com.upao.pe.coderlink.models.Developer;
 import com.upao.pe.coderlink.models.Postulation;
 import com.upao.pe.coderlink.models.Project;
 import com.upao.pe.coderlink.models.enums.ProjectStatus;
@@ -25,6 +23,8 @@ public class ProjectService {
     private ProjectRepository projectRepository;
     @Autowired
     private CustomerService customerService;
+    @Autowired EmailService emailService;
+    @Autowired DeveloperService developerService;
 
     // CREATE
     public ProjectDTO createProject(CreateProjectRequest request){
@@ -84,5 +84,12 @@ public class ProjectService {
         project.setUpdatedAt(LocalDateTime.now());
         projectRepository.saveAndFlush(project);
         return returnProjectDTO(project);
+    }
+
+    public AskChangesResponse askChanges(AskChangesRequest request){
+        Developer developer = developerService.getDeveloper(request.getDevName());
+        Project project = getProjectById(request.getIdProject());
+        emailService.sendEmail(developer.getEmail(), "Solicitud de cambios en el proyecto "+project.getName(), "Hola, "+developer.getNames()+" te escribo para solicitar cambios en el proyecto que se viene desarrollando, los cambios son los siguientes: \n"+request.getMessage());
+        return new AskChangesResponse("Mensaje enviado");
     }
 }

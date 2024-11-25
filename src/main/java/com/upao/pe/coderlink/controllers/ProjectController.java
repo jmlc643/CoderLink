@@ -1,14 +1,9 @@
 package com.upao.pe.coderlink.controllers;
 
-import com.upao.pe.coderlink.dtos.project.CreateProjectRequest;
-import com.upao.pe.coderlink.dtos.project.ProjectDTO;
-import com.upao.pe.coderlink.dtos.project.SearchProjectRequest;
-import com.upao.pe.coderlink.dtos.project.SetStatusRequest;
+import com.upao.pe.coderlink.dtos.project.*;
 import com.upao.pe.coderlink.services.ProjectService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -47,5 +42,10 @@ public class ProjectController {
     @PostMapping("/set-status/")
     public ProjectDTO setStatusProject(@RequestBody SetStatusRequest request){
         return projectService.setStatusProject(request);
+    }
+
+    @PostMapping("/ask-changes/")
+    public AskChangesResponse askChanges(@RequestBody AskChangesRequest request){
+        return projectService.askChanges(request);
     }
 }
